@@ -1,0 +1,52 @@
+# 网站后台配置。
+backend:
+  name: github
+  repo: chenxianshu5999-lgtm/chenxianshu5999-lgtm.github.io
+  branch: main
+
+media_folder: images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: site
+    label: 网站
+    files:
+      - name: settings
+        label: 基本设置
+        file: content/settings.json
+        fields:
+          - { name: title, label: 网站标题, widget: string }
+          - { name: description, label: 网站简介（搜索引擎显示）, widget: text, required: false }
+          - { name: language, label: 语言, widget: select, options: [zh-CN, en], default: zh-CN }
+          - { name: accent, label: 主题色, widget: color, default: "#2f6feb" }
+          - { name: show_header, label: 显示顶部标题栏, widget: boolean, default: false, required: false }
+
+      - name: menu
+        label: 导航菜单
+        file: content/menu.json
+        fields:
+          - name: items
+            label: 菜单项（可拖动排序）
+            widget: list
+            required: false
+            fields:
+              - { name: label, label: 显示文字, widget: string }
+              - { name: link, label: 链接（站内板块用 #锚点）, widget: string, required: false }
+
+      - name: home
+        label: 首页板块
+        file: content/home.json
+        fields:
+          - name: sections
+            label: 板块（可添加、删除、拖动排序）
+            widget: list
+            required: false
+            typeKey: type
+            types:
+              - name: text
+                label: 文字板块
+                fields:
+                  - { name: title, label: 标题, widget: string, required: false }
+                  - { name: body, label: 正文, widget: markdown, required: false }
+                  - { name: anchor, label: 锚点（导航跳转用，如 about）, widget: string, required: false }
+                  - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }

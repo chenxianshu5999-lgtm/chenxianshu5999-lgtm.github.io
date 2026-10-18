@@ -1,0 +1,16 @@
+:root { --accent: #2f6feb; --text: #1f2328; --muted: #656d76; --bg: #ffffff; }
+@media (prefers-color-scheme: dark) {
+  :root { --text: #e6edf3; --muted: #9198a1; --bg: #0d1117; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.7 system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+a { color: var(--accent); }
+#site-header { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+#site-title { font-weight: 600; font-size: 18px; color: var(--text); text-decoration: none; }
+#site-nav { display: flex; flex-wrap: wrap; gap: 16px; }
+#site-nav a { color: var(--muted); text-decoration: none; }
+#site-nav a:hover { color: var(--accent); }
+main { max-width: 960px; margin: 0 auto; padding: 0 16px 64px; }
+.section { padding: 48px 0; }
+.section h2 { margin: 0 0 16px; font-size: 26px; }
+.section img { max-width: 100%; height: auto; }
