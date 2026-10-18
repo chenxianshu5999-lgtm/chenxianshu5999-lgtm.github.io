@@ -31,7 +31,7 @@ collections:
             required: false
             fields:
               - { name: label, label: 显示文字, widget: string }
-              - { name: link, label: 链接（站内板块用 #锚点）, widget: string, required: false }
+              - { name: link, label: "链接（站内板块用 #锚点）", widget: string, required: false }
 
       - name: home
         label: 首页板块
