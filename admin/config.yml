@@ -18,7 +18,7 @@ collections:
           - { name: title, label: 网站标题, widget: string }
           - { name: description, label: 一句话简介（显示在首页标题下，也给搜索引擎）, widget: text, required: false }
           - { name: language, label: 语言, widget: select, options: [en, zh-CN, ja], default: en }
-          - { name: accent, label: 标识色（左侧色条、按钮、链接）, widget: color, default: "#0e5a4e" }
+          - { name: accent, label: 标识色（左侧色条、按钮、链接）, widget: color, default: "#000000" }
 
       - name: gallery
         label: Gallery（画）

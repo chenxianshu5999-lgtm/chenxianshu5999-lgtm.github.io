@@ -1,5 +1,4 @@
-/* Substanz — in-house system look.
-   Colours come from hospital corridors: pale wall green, sign green, call-light orange. */
+/* Substanz — in-house system look. Pure black on white, no greys. */
 
 @font-face {
   font-family: "Atkinson Hyperlegible";
@@ -13,13 +12,13 @@
 }
 
 :root {
-  --wall: #dfe7e2;      /* corridor wall */
-  --sheet: #f6f8f6;     /* record sheet */
-  --ink: #14302a;       /* bottle green, used instead of black */
-  --soft: #4d655e;      /* secondary text */
-  --rule: #a9bbb3;      /* lines */
-  --sign: #0e5a4e;      /* signage green, set from the admin */
-  --call: #e8792b;      /* call light */
+  --wall: #ffffff;      /* page */
+  --sheet: #ffffff;     /* side board */
+  --ink: #000000;       /* text */
+  --soft: #000000;      /* secondary text: same black, set smaller instead of lighter */
+  --rule: #000000;      /* lines */
+  --sign: #000000;      /* side band, buttons, links; can be set from the admin */
+  --call: #000000;      /* current-page dot, focus ring */
   --board-w: 232px;
   --step: 8px;
 }
@@ -33,7 +32,7 @@ body {
   font: 400 17px/1.6 "Atkinson Hyperlegible", "PingFang SC", "Hiragino Sans", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
 }
 a { color: var(--sign); text-underline-offset: 3px; }
-a:hover { color: var(--ink); }
+a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--call); outline-offset: 2px; }
 img { max-width: 100%; height: auto; display: block; }
 h1, h2, h3, p, dl, dd, ul { margin: 0; }
@@ -106,7 +105,8 @@ ul { padding: 0; list-style: none; }
   display: inline-block; padding: 11px 20px; background: var(--sign); color: #fff;
   font-weight: 700; text-decoration: none; border-radius: 2px;
 }
-.button:hover { background: var(--ink); color: #fff; }
+.button { border: 2px solid var(--sign); }
+.button:hover { background: #fff; color: var(--sign); }
 
 /* ---------- overview ---------- */
 .rooms { max-width: 760px; }
@@ -174,9 +174,4 @@ ul { padding: 0; list-style: none; }
   .book { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; }
   .book-title, .work-title { font-size: 22px; }
   .rooms .room-name { font-size: 20px; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .board-nav a[aria-current="page"] .nav-label::before { animation: call 2.4s ease-in-out 1; }
-  @keyframes call { 0%, 60% { box-shadow: 0 0 0 0 rgba(232, 121, 43, .55); } 100% { box-shadow: 0 0 0 9px rgba(232, 121, 43, 0); } }
 }
