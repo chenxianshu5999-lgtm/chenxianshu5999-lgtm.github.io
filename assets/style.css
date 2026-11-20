@@ -123,11 +123,13 @@ ul { padding: 0; list-style: none; }
 .rooms .room-note { grid-column: 1 / -1; color: var(--soft); max-width: 60ch; }
 
 /* ---------- gallery: image, details, note. No frames. ---------- */
-.work { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr); gap: 36px; }
+.work { max-width: 860px; }
+.work-side { margin-top: 20px; max-width: 66ch; }
 .work + .work { margin-top: 88px; }
 .work-image { align-self: start; }
 .work-image a { display: block; }
-.work-image img { width: 100%; }
+.work-image a { width: fit-content; max-width: 100%; }
+.work-image img { width: auto; max-width: 100%; max-height: 86vh; }
 .work-title { font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 14px; }
 .work .fields dt, .work .fields dd { border: 0; padding: 2px 0; }
 .work .fields dt { padding-right: 16px; }
@@ -166,7 +168,8 @@ ul { padding: 0; list-style: none; }
   .board-links { display: none; }
   .view { margin-left: 0; padding: 28px 16px 72px; }
   .view-title { font-size: 30px; }
-  .work, .demo { grid-template-columns: 1fr; gap: 18px; }
+  .demo { grid-template-columns: 1fr; gap: 18px; }
+  .work-side { margin-top: 16px; }
   .work + .work { margin-top: 56px; }
   .book { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; }
   .book-title, .work-title { font-size: 22px; }
