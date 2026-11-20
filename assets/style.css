@@ -122,16 +122,15 @@ ul { padding: 0; list-style: none; }
 .rooms .room-count { color: var(--soft); font-variant-numeric: tabular-nums; }
 .rooms .room-note { grid-column: 1 / -1; color: var(--soft); max-width: 60ch; }
 
-/* ---------- gallery: one sheet per work ---------- */
-.work {
-  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr); gap: 32px;
-  padding: 24px; background: var(--sheet); border: 1px solid var(--rule);
-}
-.work + .work { margin-top: 28px; }
+/* ---------- gallery: image, details, note. No frames. ---------- */
+.work { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr); gap: 36px; }
+.work + .work { margin-top: 88px; }
 .work-image { align-self: start; }
 .work-image a { display: block; }
-.work-image img { width: 100%; background: var(--wall); }
-.work-title { font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 16px; }
+.work-image img { width: 100%; }
+.work-title { font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 14px; }
+.work .fields dt, .work .fields dd { border: 0; padding: 2px 0; }
+.work .fields dt { padding-right: 16px; }
 .work-text { margin-top: 18px; font-size: 16px; }
 
 /* ---------- books ---------- */
@@ -168,7 +167,7 @@ ul { padding: 0; list-style: none; }
   .view { margin-left: 0; padding: 28px 16px 72px; }
   .view-title { font-size: 30px; }
   .work, .demo { grid-template-columns: 1fr; gap: 18px; }
-  .work { padding: 14px; }
+  .work + .work { margin-top: 56px; }
   .book { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; }
   .book-title, .work-title { font-size: 22px; }
   .rooms .room-name { font-size: 20px; }
