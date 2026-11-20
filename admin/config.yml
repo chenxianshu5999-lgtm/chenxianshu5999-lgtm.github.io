@@ -59,6 +59,26 @@ collections:
               - { name: link_label, label: "按钮文字（默认 Get this book）", widget: string, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
+      - name: shop
+        label: Shop（环形塔物贩协会）
+        file: content/shop.json
+        fields:
+          - { name: title, label: 页面标题, widget: string, default: 环形塔物贩协会 }
+          - { name: intro, label: 标题下的一句话, widget: string, required: false }
+          - { name: url, label: 微店店铺网址, widget: string, required: false }
+          - name: items
+            label: 在售商品（可添加、删除、拖动排序）
+            widget: list
+            required: false
+            summary: "{{fields.name}} {{fields.price}}"
+            fields:
+              - { name: image, label: 商品图, widget: image, required: false }
+              - { name: name, label: 商品名, widget: string }
+              - { name: price, label: "价格（如 ¥35）", widget: string, required: false }
+              - { name: status, label: "状态（如 Pre-order, Sold out，可留空）", widget: string, required: false }
+              - { name: link, label: 这件商品的微店链接（留空则跳到店铺）, widget: string, required: false }
+              - { name: hidden, label: 暂时隐藏（下架时勾上）, widget: boolean, default: false, required: false }
+
       - name: demo
         label: Phantom Limb（幻肢 demo）
         file: content/demo.json

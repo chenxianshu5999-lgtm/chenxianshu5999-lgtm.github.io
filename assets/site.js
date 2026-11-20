@@ -5,6 +5,7 @@ const VIEWS = [
   { id: 'overview', label: 'Overview' },
   { id: 'gallery', label: 'Gallery' },
   { id: 'books', label: 'Books' },
+  { id: 'shop', label: 'Shop' },
   { id: 'phantom-limb', label: 'Phantom Limb' },
 ];
 
@@ -68,6 +69,8 @@ const render = {
     const works = shown(data.gallery.works), books = shown(data.books.items);
     row('gallery', 'Gallery', plural(works.length, 'work', 'works'), 'Paintings, prints and drawings.');
     row('books', 'Books', plural(books.length, 'title', 'titles'), 'Printed and digital books.');
+    const goods = shown(data.shop.items);
+    row('shop', data.shop.title || 'Shop', plural(goods.length, 'item', 'items'), 'Goods, books and prints on sale now.');
     row('phantom-limb', data.demo.title || 'Phantom Limb', data.demo.url ? 'Playable' : 'Not loaded yet', 'A hypertext visual novel, playable in the browser.');
     frag.append(rooms);
     return frag;
@@ -133,6 +136,35 @@ const render = {
     return frag;
   },
 
+  shop(data) {
+    const sh = data.shop, frag = document.createDocumentFragment();
+    const items = shown(sh.items);
+    frag.append(head(sh.title || 'Shop', sh.intro));
+    if (sh.url) {
+      const p = el('p', 'shop-open');
+      const a = el('a', 'button', 'Open the shop on Weidian');
+      a.href = sh.url; a.target = '_blank'; a.rel = 'noopener';
+      p.append(a); frag.append(p);
+    }
+    if (!items.length) {
+      frag.append(el('p', 'empty', 'Nothing is listed here yet. Add what is on sale from the admin under Shop.'));
+      return frag;
+    }
+    const grid = el('div', 'goods');
+    for (const g of items) {
+      const link = g.link || sh.url;
+      const card = el(link ? 'a' : 'div', 'good');
+      if (link) { card.href = link; card.target = '_blank'; card.rel = 'noopener'; }
+      if (g.image) { const img = el('img'); img.src = asset(g.image); img.alt = ''; img.loading = 'lazy'; card.append(img); }
+      card.append(el('span', 'good-name', g.name || 'Untitled'));
+      const line = [g.price, g.status].filter(Boolean).join(', ');
+      if (line) card.append(el('span', 'good-line', line));
+      grid.append(card);
+    }
+    frag.append(grid);
+    return frag;
+  },
+
   'phantom-limb'(data) {
     const d = data.demo, frag = document.createDocumentFragment();
     frag.append(head(d.title || 'Phantom Limb', d.tagline));
@@ -158,7 +190,7 @@ const render = {
 };
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'demo'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
@@ -171,6 +203,7 @@ const render = {
   const counts = {
     gallery: shown(data.gallery.works).length,
     books: shown(data.books.items).length,
+    shop: shown(data.shop.items).length,
   };
   const nav = document.getElementById('site-nav');
   for (const v of VIEWS) {

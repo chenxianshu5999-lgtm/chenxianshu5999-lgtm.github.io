@@ -1,9 +1,10 @@
 # Substanz（个人网站）
 
-纯静态网站 + 可视化后台（Sveltia CMS）。界面是英文，四个页面：Overview / Gallery / Books / Phantom Limb。
+纯静态网站 + 可视化后台（Sveltia CMS）。界面是英文，五个页面：Overview / Gallery / Books / Shop / Phantom Limb。
 
 - 公开页面：`index.html`，内容全部来自 `content/*.json`。
 - 后台：访问 `/admin/`，可以加画、加本、填幻肢 demo 的链接、改首页文字和外部链接。
+- Shop：微店没有可以给静态网站读取的公开接口，所以在售商品是在后台「Shop」里手动维护的列表，上新、下架时在后台改一下。
 - 图片上传到 `images/uploads/`。
 - 幻肢 demo：把 demo 的文件（含它自己的 `index.html`）放进 `phantom-limb/` 文件夹，再在后台「Phantom Limb」里把链接填成 `phantom-limb/`。
 
