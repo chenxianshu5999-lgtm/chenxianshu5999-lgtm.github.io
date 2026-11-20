@@ -189,8 +189,72 @@ const render = {
   },
 };
 
+// Music bar in the top-right corner. Tracks come from content/music.json.
+// Browsers refuse to start sound before the visitor has touched the page, so
+// if the first attempt is refused, playback starts on their first click or key.
+function startPlayer(music) {
+  const tracks = shown(music.tracks).filter((t) => t.file);
+  if (!tracks.length) return;
+  const box = document.getElementById('player');
+  const toggle = document.getElementById('player-toggle');
+  const next = document.getElementById('player-next');
+  const now = document.getElementById('player-now');
+  const audio = new Audio();
+  audio.preload = 'none';
+  audio.volume = 0.6;
+
+  const remember = (v) => { try { localStorage.setItem('substanz-music', v); } catch {} };
+  const remembered = () => { try { return localStorage.getItem('substanz-music'); } catch { return null; } };
+
+  let order = tracks.map((_, i) => i);
+  if (music.shuffle) order.sort(() => Math.random() - 0.5);
+  let at = 0;
+
+  function load(i) {
+    at = (i + order.length) % order.length;
+    const t = tracks[order[at]];
+    audio.src = /^https?:/.test(t.file) ? t.file : asset(t.file);
+    now.textContent = [t.title, t.artist].filter(Boolean).join(' / ') || 'Untitled';
+    now.title = now.textContent;
+  }
+  function paint() {
+    const playing = !audio.paused;
+    box.classList.toggle('is-playing', playing);
+    toggle.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
+  }
+  const play = () => audio.play().then(paint, paint);
+
+  toggle.addEventListener('click', () => {
+    if (audio.paused) { remember('on'); play(); } else { audio.pause(); remember('off'); }
+  });
+  next.addEventListener('click', () => { load(at + 1); remember('on'); play(); });
+  audio.addEventListener('ended', () => { load(at + 1); play(); });
+  audio.addEventListener('error', () => { if (order.length > 1) { load(at + 1); if (box.classList.contains('is-playing')) play(); } paint(); });
+  audio.addEventListener('pause', paint);
+  audio.addEventListener('play', paint);
+  next.hidden = order.length < 2;
+
+  load(0);
+  box.hidden = false;
+  document.body.classList.add('has-player');
+
+  // Start by itself unless the visitor paused it last time.
+  if (music.autoplay !== false && remembered() !== 'off') {
+    audio.play().then(paint, () => {
+      const kick = (e) => {
+        document.removeEventListener('pointerdown', kick, true);
+        document.removeEventListener('keydown', kick, true);
+        if (e.target.closest && e.target.closest('#player')) return; // their own click decides
+        if (remembered() !== 'off') play();
+      };
+      document.addEventListener('pointerdown', kick, true);
+      document.addEventListener('keydown', kick, true);
+    });
+  }
+}
+
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
@@ -240,4 +304,5 @@ const render = {
   }
   window.addEventListener('hashchange', show);
   show();
+  startPlayer(data.music);
 })();

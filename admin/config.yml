@@ -90,6 +90,23 @@ collections:
           - { name: cover, label: 封面图, widget: image, required: false }
           - { name: note, label: "小字备注（如 Chinese only, best on desktop）", widget: string, required: false }
 
+      - name: music
+        label: 音乐栏（右上角）
+        file: content/music.json
+        fields:
+          - { name: autoplay, label: 打开网站时自动播放, widget: boolean, default: true, required: false }
+          - { name: shuffle, label: 随机顺序, widget: boolean, default: false, required: false }
+          - name: tracks
+            label: 曲目（可添加、删除、拖动排序）
+            widget: list
+            required: false
+            summary: "{{fields.title}} / {{fields.artist}}"
+            fields:
+              - { name: title, label: 曲名, widget: string }
+              - { name: artist, label: 作者, widget: string, required: false }
+              - { name: file, label: "音频文件（mp3 / m4a / ogg）", widget: file }
+              - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
+
       - name: home
         label: 首页文字
         file: content/home.json

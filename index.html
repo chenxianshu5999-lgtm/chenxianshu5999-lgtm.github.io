@@ -18,6 +18,16 @@
     </header>
     <main class="view" id="view" tabindex="-1"></main>
   </div>
+  <div class="player" id="player" hidden>
+    <button class="player-btn" id="player-toggle" type="button" aria-label="Play music">
+      <svg class="icon-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg>
+      <svg class="icon-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 1.5h3.5v13H3zM9.5 1.5H13v13H9.5z"/></svg>
+    </button>
+    <span class="player-now" id="player-now"></span>
+    <button class="player-btn" id="player-next" type="button" aria-label="Next track">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M2 1.5v13l8.5-6.5zM11 1.5h3v13h-3z"/></svg>
+    </button>
+  </div>
   <script src="assets/vendor/marked.min.js"></script>
   <script src="assets/site.js"></script>
 </body>
