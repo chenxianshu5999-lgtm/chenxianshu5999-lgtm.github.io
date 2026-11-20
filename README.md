@@ -1,10 +1,11 @@
-# 个人网站
+# Substanz（个人网站）
 
-纯静态网站 + 可视化后台（Sveltia CMS，兼容 Decap/Netlify CMS 配置）。
+纯静态网站 + 可视化后台（Sveltia CMS）。界面是英文，四个页面：Overview / Gallery / Books / Phantom Limb。
 
-- 公开页面：`index.html`，内容来自 `content/*.json`，目前全部为空，所以页面是空白的。
-- 后台：访问 `/admin/`，左侧有「基本设置」「导航菜单」「首页板块」，板块可添加、删除、拖动排序、临时隐藏。
+- 公开页面：`index.html`，内容全部来自 `content/*.json`。
+- 后台：访问 `/admin/`，可以加画、加本、填幻肢 demo 的链接、改首页文字和外部链接。
 - 图片上传到 `images/uploads/`。
+- 幻肢 demo：把 demo 的文件（含它自己的 `index.html`）放进 `phantom-limb/` 文件夹，再在后台「Phantom Limb」里把链接填成 `phantom-limb/`。
 
 ## 本地预览
 
@@ -12,13 +13,12 @@
 python3 -m http.server 8000
 ```
 
-打开 http://localhost:8000 看网站，http://localhost:8000/admin/ 进后台（用 Chrome/Edge，选择 “Work with Local Repository” 并选中本文件夹，改动直接写回本地文件）。
+打开 http://localhost:8000 看网站，http://localhost:8000/admin/ 进后台（用 Chrome/Edge，选择 “Work with Local Repository” 并选中本文件夹）。
 
 ## 上线后登录后台
 
-把 `admin/config.yml` 里的 `repo` 改成你的 GitHub 仓库，部署到 GitHub Pages 后打开 `你的网址/admin/`，用 GitHub 的 Personal Access Token 登录即可，保存时会自动提交到仓库并重新发布。
+打开 `你的网址/admin/`，用 GitHub 的 Personal Access Token 登录，保存时会自动提交到仓库并重新发布。
 
-## 新增板块类型
+## 改外观
 
-1. `assets/site.js` 的 `renderers` 里加一个渲染函数；
-2. `admin/config.yml` 的 `sections.types` 里加同名类型和字段。
+颜色和字体都在 `assets/style.css` 顶部的 `:root` 里。左侧色条的颜色也可以直接在后台「基本设置」改。字体 Atkinson Hyperlegible 和 Markdown 解析器 marked 都放在 `assets/` 里，不依赖外部 CDN。

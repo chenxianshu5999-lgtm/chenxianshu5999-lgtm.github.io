@@ -16,37 +16,85 @@ collections:
         file: content/settings.json
         fields:
           - { name: title, label: 网站标题, widget: string }
-          - { name: description, label: 网站简介（搜索引擎显示）, widget: text, required: false }
-          - { name: language, label: 语言, widget: select, options: [zh-CN, en], default: zh-CN }
-          - { name: accent, label: 主题色, widget: color, default: "#2f6feb" }
-          - { name: show_header, label: 显示顶部标题栏, widget: boolean, default: false, required: false }
+          - { name: description, label: 一句话简介（显示在首页标题下，也给搜索引擎）, widget: text, required: false }
+          - { name: language, label: 语言, widget: select, options: [en, zh-CN, ja], default: en }
+          - { name: accent, label: 标识色（左侧色条、按钮、链接）, widget: color, default: "#0e5a4e" }
 
-      - name: menu
-        label: 导航菜单
-        file: content/menu.json
+      - name: gallery
+        label: Gallery（画）
+        file: content/gallery.json
         fields:
-          - name: items
-            label: 菜单项（可拖动排序）
+          - { name: intro, label: 页面顶部的一句话, widget: string, required: false }
+          - name: works
+            label: 作品（可添加、删除、拖动排序）
             widget: list
             required: false
+            summary: "{{fields.title}} ({{fields.year}})"
             fields:
-              - { name: label, label: 显示文字, widget: string }
-              - { name: link, label: "链接（站内板块用 #锚点）", widget: string, required: false }
+              - { name: image, label: 图片, widget: image }
+              - { name: title, label: 标题, widget: string, required: false }
+              - { name: year, label: 年份, widget: string, required: false }
+              - { name: medium, label: "材料（如 Oil on canvas）", widget: string, required: false }
+              - { name: size, label: "尺寸（如 F60, 130.3 × 97 cm）", widget: string, required: false }
+              - { name: description, label: 简介, widget: markdown, required: false }
+              - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
+
+      - name: books
+        label: Books（本）
+        file: content/books.json
+        fields:
+          - { name: intro, label: 页面顶部的一句话, widget: string, required: false }
+          - name: items
+            label: 本（可添加、删除、拖动排序）
+            widget: list
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { name: cover, label: 封面, widget: image, required: false }
+              - { name: title, label: 书名, widget: string }
+              - { name: year, label: 年份, widget: string, required: false }
+              - { name: format, label: "形式（如 PDF, 24 pages）", widget: string, required: false }
+              - { name: description, label: 简介, widget: markdown, required: false }
+              - { name: link, label: 购买/阅读链接, widget: string, required: false }
+              - { name: link_label, label: "按钮文字（默认 Get this book）", widget: string, required: false }
+              - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
+
+      - name: demo
+        label: Phantom Limb（幻肢 demo）
+        file: content/demo.json
+        fields:
+          - { name: title, label: 标题, widget: string, default: Phantom Limb }
+          - { name: tagline, label: 标题下的一句话, widget: string, required: false }
+          - { name: description, label: 介绍, widget: markdown, required: false }
+          - { name: url, label: "demo 链接（文件放进 phantom-limb 文件夹后填 phantom-limb/）", widget: string, required: false }
+          - { name: cover, label: 封面图, widget: image, required: false }
+          - { name: note, label: "小字备注（如 Chinese only, best on desktop）", widget: string, required: false }
 
       - name: home
-        label: 首页板块
+        label: 首页文字
         file: content/home.json
         fields:
           - name: sections
-            label: 板块（可添加、删除、拖动排序）
+            label: 文字段落（可添加、删除、拖动排序）
             widget: list
             required: false
             typeKey: type
             types:
               - name: text
-                label: 文字板块
+                label: 文字
                 fields:
-                  - { name: title, label: 标题, widget: string, required: false }
+                  - { name: title, label: 小标题, widget: string, required: false }
                   - { name: body, label: 正文, widget: markdown, required: false }
-                  - { name: anchor, label: 锚点（导航跳转用，如 about）, widget: string, required: false }
                   - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
+
+      - name: menu
+        label: 外部链接
+        file: content/menu.json
+        fields:
+          - name: items
+            label: 链接（显示在左侧栏底部，如 Instagram、BOOTH）
+            widget: list
+            required: false
+            fields:
+              - { name: label, label: 显示文字, widget: string }
+              - { name: link, label: 网址, widget: string }
