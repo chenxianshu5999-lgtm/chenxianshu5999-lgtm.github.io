@@ -78,20 +78,23 @@ function workCard(w) {
   return art;
 }
 
-// Marks, in the gallery rail, the category currently on screen.
+// The gallery rail is a progress bar in segments, one per category. The segment
+// of the category on screen stretches and fills as that category is scrolled through;
+// categories already passed are full, the ones ahead are empty.
 function spyRail() {
-  const items = document.querySelectorAll('.rail-item');
+  const items = [...document.querySelectorAll('.rail-item')];
   if (!items.length) return;
   const line = window.innerHeight * 0.35;
-  let current = items[0].dataset.target;
-  for (const it of items) {
-    const sec = document.getElementById(it.dataset.target);
-    if (sec && sec.getBoundingClientRect().top <= line) current = it.dataset.target;
-  }
-  for (const it of items) {
-    if (it.dataset.target === current) it.setAttribute('aria-current', 'true');
+  const rects = items.map((it) => document.getElementById(it.dataset.target).getBoundingClientRect());
+  let cur = 0;
+  rects.forEach((r, i) => { if (r.top <= line) cur = i; });
+  items.forEach((it, i) => {
+    let p = i < cur ? 1 : 0;
+    if (i === cur) p = Math.min(1, Math.max(0, (line - rects[i].top) / Math.max(1, rects[i].height)));
+    it.style.setProperty('--p', p.toFixed(4));
+    if (i === cur) it.setAttribute('aria-current', 'true');
     else it.removeAttribute('aria-current');
-  }
+  });
 }
 
 const render = {
@@ -155,8 +158,13 @@ const render = {
       const b = el('button', 'rail-item');
       b.type = 'button';
       b.dataset.target = sec.id;
-      b.append(el('span', 'rail-label', g.label), el('span', 'rail-count', String(g.works.length)));
-      b.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      const track = el('span', 'rail-track');
+      track.append(el('span', 'rail-fill'));
+      b.append(track, el('span', 'rail-label', g.label), el('span', 'rail-count', String(g.works.length)));
+      b.addEventListener('click', (e) => {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (e.detail > 0) b.blur(); // pointer click: no focus ring left behind
+      });
       rail.append(b);
     });
     wrap.append(main, rail);
