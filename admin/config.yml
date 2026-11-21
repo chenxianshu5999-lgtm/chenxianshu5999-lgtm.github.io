@@ -38,6 +38,7 @@ collections:
               - { name: medium, label: "材料（如 Oil on canvas）", widget: string, required: false }
               - { name: size, label: "尺寸（如 F60, 130.3 × 97 cm）", widget: string, required: false }
               - { name: description, label: 简介, widget: markdown, required: false }
+              - { name: secret, label: 简介隐藏（点三下标题才显示）, widget: boolean, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
       - name: books

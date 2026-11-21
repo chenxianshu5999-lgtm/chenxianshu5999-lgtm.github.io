@@ -184,6 +184,7 @@ ul { padding: 0; list-style: none; }
 .work-image.is-open img.has-ratio { width: min(100%, calc(86vh * var(--r))); }
 @media (prefers-reduced-motion: reduce) { .work-image img { transition: none; } }
 .work-title { font-size: 18px; font-weight: 400; line-height: 1.35; margin-bottom: 10px; }
+.work-title.is-knock { -webkit-user-select: none; user-select: none; touch-action: manipulation; }
 .work .fields dt, .work .fields dd { border: 0; padding: 2px 0; }
 .work .fields dt { padding-right: 16px; }
 .work-text { margin-top: 18px; font-size: 16px; }

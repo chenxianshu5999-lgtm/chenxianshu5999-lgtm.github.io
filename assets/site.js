@@ -72,10 +72,25 @@ function workCard(w) {
     });
   }
   const side = el('div', 'work-side');
-  side.append(el('h3', 'work-title', w.title || 'Untitled'));
+  const title = el('h3', 'work-title', w.title || 'Untitled');
+  side.append(title);
   const f = fields([['Year', w.year], ['Medium', w.medium], ['Size', w.size]]);
   if (f) side.append(f);
-  if (w.description) { const t = md(w.description); t.classList.add('work-text'); side.append(t); }
+  if (w.description) {
+    const t = md(w.description); t.classList.add('work-text');
+    if (w.secret) {
+      // Hidden text: three quick taps on the title show it, three more hide it again.
+      t.hidden = true;
+      title.classList.add('is-knock');
+      let taps = 0, last = 0;
+      title.addEventListener('click', () => {
+        const now = Date.now();
+        taps = now - last < 600 ? taps + 1 : 1; last = now;
+        if (taps === 3) { taps = 0; t.hidden = !t.hidden; }
+      });
+    }
+    side.append(t);
+  }
   art.append(fig, side);
   return art;
 }
