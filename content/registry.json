@@ -228,6 +228,14 @@
       "kind": "Company",
       "status": "Registered",
       "note": "手握很多设计专利但快破产了。"
+    },
+    {
+      "no": "",
+      "name": "幻肢（Phantom Limb）",
+      "kind": "Publication",
+      "status": "Open",
+      "note": "一名员工的精神发病录。超文本视觉小说，试玩版。",
+      "link": "#phantom-limb"
     }
   ]
 }

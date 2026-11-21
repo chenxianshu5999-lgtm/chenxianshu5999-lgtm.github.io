@@ -244,6 +244,8 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
   --rule: #ffffff; --sign: #ffffff; --call: #ffffff;
 }
 .is-hidden-room .player { background: #000; }
+.is-hidden-room .button { background: #fff; color: #000; border-color: #fff; }
+.is-hidden-room .button:hover { background: #000; color: #fff; }
 .is-hidden-room .player-btn:hover { background: #fff; color: #000; }
 .reg-tally { margin: -8px 0 28px; font-size: 15px; font-variant-numeric: tabular-nums; }
 .reg { max-width: 860px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }

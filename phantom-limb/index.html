@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>幻肢</title>
+        <script src="js/konva.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                background-color: #000;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            /* web version: styles the desktop app added at start-up */
+            #game {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #game canvas {
+                display: block;
+            }
+
+            /* #game {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #game canvas {
+                display: block;
+                aspect-ratio: 19/10;
+            } */
+
+            .accessibility-controls {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                z-index: 9999;
+            }
+
+            .accessibility-button {
+                padding: 8px 12px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                border: 1px solid #555;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: all 0.3s ease;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .accessibility-button:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: #999;
+            }
+
+            .accessibility-button.active {
+                background: rgba(255, 255, 255, 0.2);
+                border-color: #fff;
+            }
+
+            .high-contrast {
+                filter: contrast(150%) brightness(120%);
+            }
+
+            .protanopia {
+                filter: contrast(120%) sepia(0.3) hue-rotate(10deg);
+            }
+
+            .deuteranopia {
+                filter: contrast(120%) sepia(0.2) hue-rotate(-10deg);
+            }
+
+            .tritanopia {
+                filter: contrast(120%) sepia(0.4) hue-rotate(30deg);
+            }
+
+            .protanomaly {
+                filter: contrast(110%) saturate(150%) hue-rotate(-15deg);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="game"></div>
+        
+        <div class="accessibility-controls">
+            <button class="accessibility-button" id="contrast-btn">高对比度模式</button>
+            <button class="accessibility-button" id="protanopia-btn">红色弱增强</button>
+            <button class="accessibility-button" id="deuteranopia-btn">绿色弱增强</button>
+            <button class="accessibility-button" id="tritanopia-btn">蓝色弱增强</button>
+            <button class="accessibility-button" id="protanomaly-btn">黄色弱增强</button>
+        </div>
+        
+        <script src="js/game.js"></script>
+        <script src="js/fit.js"></script>
+        <script src="js/demo.js"></script>
+        <script>
+            let currentFilter = null;
+            
+            function toggleFilter(filterClass, buttonId) {
+                const body = document.body;
+                const button = document.getElementById(buttonId);
+                
+                body.classList.remove('high-contrast', 'protanopia', 'deuteranopia', 'tritanopia', 'protanomaly');
+                
+                document.querySelectorAll('.accessibility-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                if (currentFilter !== filterClass) {
+                    body.classList.add(filterClass);
+                    button.classList.add('active');
+                    currentFilter = filterClass;
+                } else {
+                    currentFilter = null;
+                }
+            }
+            
+            document.getElementById('contrast-btn').addEventListener('click', () => {
+                toggleFilter('high-contrast', 'contrast-btn');
+            });
+            
+            document.getElementById('protanopia-btn').addEventListener('click', () => {
+                toggleFilter('protanopia', 'protanopia-btn');
+            });
+            
+            document.getElementById('deuteranopia-btn').addEventListener('click', () => {
+                toggleFilter('deuteranopia', 'deuteranopia-btn');
+            });
+            
+            document.getElementById('tritanopia-btn').addEventListener('click', () => {
+                toggleFilter('tritanopia', 'tritanopia-btn');
+            });
+            
+            document.getElementById('protanomaly-btn').addEventListener('click', () => {
+                toggleFilter('protanomaly', 'protanomaly-btn');
+            });
+        </script>
+    </body>
+</html>

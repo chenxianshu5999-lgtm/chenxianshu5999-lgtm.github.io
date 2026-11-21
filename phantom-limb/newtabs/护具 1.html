@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>护具 1</title>
+        <script src="../js/konva.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                background-color: #000;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            #game {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #game canvas {
+                display: block;
+                aspect-ratio: 19/10;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="game"></div>
+        
+        
+        <script src="../js/game.js"></script>
+        <script src="../js/fit.js"></script>
+        <script>
+            JustLayer("护具 1", () => {
+                return new Promise((resolve) => {
+                    return resolve()
+                })
+                    .then(() => {
+                        return Background("../assets/images/背景.png", 0)
+                    })
+                    .then(() => {
+                        return TextBox(100, 100, 300, "护具 1", ["门外，我站在地铁高峰的人流中，拥挤的恍惚过后，闻到了属于外部的空气。", "手中攥着一张草纸，上面写着【】。", "周围看不到站牌，只好找人问一下这是哪站。"], "#809e88", "#eee")
+                    })
+                    .then(([rect, text]) => {
+                        return WaitForClick(rect, text)
+                    })
+                    .then(() => {
+                        return TextBox(105, 189, 300, "护具 1", ["是我家的那站，所以我刷卡出站了。"], "#809e88", "#eee")
+                    })
+                    .then(([rect, text]) => {
+                        return WaitForClick(rect, text)
+                    })
+                    .then(() => {
+                        return TextBox(120, 278, 300, "护具 1", ["街上的人都很奇怪，我感受不到他们脸的朝向和自我的方向性，所有人只是像模型一样在街上漫步而已。", "太阳碍眼地挂在天上，我觉得大家都在被太阳垂下的磁感线控制了。"], "#809e88", "#eee")
+                    })
+                    .then(([rect, text]) => {
+                        return WaitForClick(rect, text)
+                    })
+                    
+                    .then(() => {
+                        return FinishLayer("护具 1")
+                    })
+            })
+                
+        </script>
+    </body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>气体的 M9</title>
+        <script src="../js/konva.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                background-color: #000;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            #game {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #game canvas {
+                display: block;
+                aspect-ratio: 19/10;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="game"></div>
+        
+        
+        <script src="../js/game.js"></script>
+        <script src="../js/fit.js"></script>
+        <script>
+            JustLayer("气体的M9", () => {
+                return new Promise((resolve) => {
+                    return resolve()
+                })
+                    .then(() => {
+                        return Background("../assets/images/花园1680.png", 0)
+                    })
+                    .then(() => {
+                        return TouchCircleAndTime(100, 100, "#333", "笼子", () => {
+                            return new Promise((resolve) => {
+                                return resolve()
+                            })
+                                .then(() => {
+                                    return EnterImageLikeBG("笼子", "../assets/images/死言-黑.png", 1000)
+                                })
+                                .then(() => {
+                                    return TextBox(100, 400, 300, "笼子", ["死言在笼子里。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(([rect, text]) => {
+                                    return RemoveRectAndText(rect, text, 500)
+                                })
+                                .then(() => TextBox(100, 400, 600, "笼子", ["死言本是生长自南非的小孩，后来被公司附属的物理研究所收养，辅助研究和实验，平时的起居由M9照顾。她在笼子里绕圈走，被挪到各种地方，随遇而安地看着被带到哪里、就看着哪里的天空。在她离开非洲后，她脑子里时而有着硬化的那种震动，时而像是被无形的手捏住了小脑一样哽咽，行走时会神经性地趔趄。她所有收到的信息都储存在距离大脑皮层三纳米的位置。那里有一块显示屏，专门为大脑皮层播放画面。死言整天摆弄自己的双手，因为她发现双手相接时形成的回路可以改变她所看到世界的物象形状，有时会很清晰很清晰，一辈子都无法忘记；有时会相当模糊（多是双手分开时），不会被记住。所以死言一整天都在调整信号接收的角度，让自己的想象于屏幕上投影的画面更加清晰，直到自己犯恶心的真实程度，每当画质达到最高点时，她都能收获一种电信号刺激的快感。"], "#eee", "#222"))
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => TextBox(gameWidth - 100, 100, 600, "笼子", ["此外，死言也会看手相，她会从大拇指开始阅读到手掌心，在这个区域内井字形的掌纹中得到人的命数。但她和物理研其他小孩一样，碍于高度符号化的环境而尚未学会语言，她成功和别人交流都依托于机械的意图推测和辅助表达。死言手上有一些会移动的小点，有一天她跟随着移动小点前进，就走到了笼子外面。当她再回到笼子里时，小点又停下来。因此，每当小点开始移动时，死言就会走出笼子，直到小点不再移动，此时的她又不知不觉回到笼子里了。当小点增多时，死言会跳起舞。说来，死言就是因为前几年小黑点突然布满全身，身体停不住抽动，才被送进公司的物理研治疗的。"], "#eee", "#222"))
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return FinishTimeLine("笼子")
+                                })
+                        })
+                    })
+                    .then(() => {
+                        return TouchCircleAndTime(405, 233, "#eee", "花园", () => {
+                            return new Promise((resolve) => {
+                                return resolve()
+                            })
+                                .then(() => {
+                                    return ClearBoxesAndImages("笼子", 500)
+                                })
+                                .then(() => {
+                                    return EnterImageLikeBG("花园", "../assets/images/月鬼（亮）1680.png", 1000)
+                                })
+                                .then(() => {
+                                    return TextBox(115, 70, 300, "花园", ["月鬼在花园玩。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(([rect, text]) => {
+                                    return RemoveRectAndText(rect, text, 500)
+                                })
+                                .then(() => {
+                                    return TextBox(125, 70, 600, "花园", ["她时不时把装着死言的笼子搬到花园里，然后一直盯着看花啊鸟啊蓝天啊的死言。死言的名字是月鬼起的，月鬼的名字是自己在街上走路时看到墙边一只跳起来的小猫时起的。月鬼经常找物理研的人聊天，自认为自己是个健谈的人。物理研的人也经常夸她聪明，给她讲些有趣的知识。月鬼面对死言时，只会说：「我和你没话讲。你大气的摇动吵到我了。」"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(120, 220, 600, "花园", ["月鬼身上有极其敏感的腮丝，在她很小的时候右臂被烧伤，因而接入了鱼的皮肤，之后月鬼逐渐变得像一条鱼，连皮肤外都长出了腮丝。虽然不能代替肺来呼吸，但像腮丝一样脆弱。月鬼的生物课老师曾拿草鱼做给月鬼做示范，将鱼的腮瓣撬开，让月鬼摸到了和她身上一样的部位。月鬼对腮长在鱼的内部这件事感到非常失落，经常抓来鱼，把鱼的腮抽出来像自己一样让腮丝垂在身体外部，再让鱼游动。而她似乎对动物的痛觉无法感知，腮丝分散了她的注意力。波光粼粼，她总会看向别的地方。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(97, 420, 600, "花园", ["物理研是个很有意思的地方，死言把整个手掌的手指塞进嘴巴里，只是发着「啊、啊。」的声音绕圈行走，月鬼把自己的眼睛揉得又红又肿，每天都要被滴上几滴眼药水，眼睛接触水时十分难受，但这也没办法。总有小孩去摇晃死言呆的笼子，但大家都怕一个高大的深黑色的研究员，只要那位研究员一来到小孩子们呆的地方，空气就像是被撕裂了，所有人变得缄默，月鬼也不敢说话。小孩子们给深黑色的研究员起了外号「这（Ge）」，每当有人感知到他要来的信号，就会在集体间传递「这（Ge）个」「要来了」。Ge会在大家的注视下打开死言的笼子，把死言抱走，回来时身上被洗净，被梳妆打扮整齐了。因此死言在孩子里算是特别的。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(102, 640, 600, "花园", ["对着其他小孩子，月鬼常神气地说：「我每天都踩死两只蜘蛛。」她扯着自己腮丝的系带，挥舞双手，只要这样就会招呼一大群小孩跟着她，回应她的声音。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return ClearBoxesAndImages("花园", 500)
+                                })
+                                .then(() => {
+                                    return Promise.all([
+                                        EnterImageLikeBG("气体的M9", "../assets/images/月鬼1680.png", 1000),
+                                        EnterImageLikeBG("气体的M9", "../assets/images/死言1680.png", 1000)
+                                    ])
+                                })
+                                .then(() => {
+                                    return TextBox(750, 70, 350, "花园", ["爸爸今天专程来看那位阿姨了。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 50, 350, "花园", ["……"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 100, 350, "花园", ["你身上有点臭。有多久没洗澡？"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 150, 350, "花园", ["（低头看手背）三天。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 200, 350, "花园", ["你想爸爸了吗？"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 250, 350, "花园", ["有 一点。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 300, 350, "花园", ["我也有一点想他。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 350, 350, "花园", ["我说他什么时候再来看我们呢。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 400, 350, "花园", ["不知道。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 450, 350, "花园", ["这里好无聊。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 500, 350, "花园", ["我 觉得……一点 也 不 无聊，要是 能 永远 呆 在 这里 才算 好 呢……"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 500 + 75, 350, "花园", ["你真怪。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 70 + 500 + 75 + 50, 350, "花园", ["还要 八日。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70, 350, "花园", ["什么？"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 50, 350, "花园", ["爸爸 来 看 我们。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 50 + 50, 350, "花园", ["我等不及了。想出去玩。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 50 + 50 + 50, 350, "花园", ["再 等一等 就 好了。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 200, 350, "花园", ["月鬼想到马上要到的寂静夜晚，她害怕身边没有爸爸的孤独的睡眠，所以声音颤抖。"], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 200 + 75, 350, "花园", ["我等不及了。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 200 + 75 + 50, 350, "花园", ["再 坚持 一下，我 陪 你 去 那条 小溪 吧，那里 不会 孤单。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1150, 70 + 200 + 75 + 50 + 75, 350, "花园", ["真的吗。我现在把你推过去。我们一起去。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return ClearBoxesAndImages("花园", 500)
+                                })
+                                .then(() => {
+                                    return TextBox(750, 70, 400, "花园", ["在月色和潺潺流动的小溪下，死言走出笼子，开始捡起河滩的石子。月鬼躺在河堤的草坪上，看着弯着腰的死言，思考着自己妈妈劳作时的身影。月鬼喊起死言："], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195, 400, "花园", ["喂——可以给我讲个睡前故事吗。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195 + 50, 400, "花园", ["好。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195 + 100, 400, "花园", ["死言坐到躺着的月鬼旁边。抬头读着星星点点，与手上的文字串联。"], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195 + 175, 400, "花园", ["在一个遥远的国度……"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195 + 175 + 50, 400, "花园", ["那里很贫穷，米啊、面啊都要很多很多钱来买，相反，石油在那里遍地都是。你可能不知道石油是什么，就当是像水一样、血一样的东西就好。那个国家也有一个叫月鬼的小孩，她发现，只要让石油燃烧，就可以形成一条长长的黑色火河。火河吞掉了田地和村庄，却照亮了夜空。鸟儿被火光惊起，在空中扑腾，就像是由石油里冒出来的。那孩子伸开双臂，以为自己也能飞起来。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(750, 195 + 175 + 50 + 225, 400, "花园", ["因此，月鬼其实是一只无齿以肌胃研磨谷物，后脚趾高于前脚趾，卵生，体温高且恒定，前趾三后趾一，喙短锐有冠的鸟纲雉科家禽，要乘着巨大的风飞翔。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70, 400, "花园", ["……"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50, 400, "花园", ["开 玩笑 的。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50, 400, "花园", ["这故事吓死我了。"], "#222", "#eee")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50, 400, "花园", ["她立刻又翻了个身，把腮丝甩得呼啦呼啦响，瞪着死言："], "#eee", "#066e00")
+                                })
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75, 400, "花园", ["这才没有！我才不怕呢。"], "#222", "#eee")
+                                })
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75 + 50, 400, "花园", ["可是她的膝盖还是蜷起来，脚趾抓紧草地，好像随时要缩进土里。"], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75 + 50 + 75, 400, "花园", ["死言看着她，只是把手里的石子一颗颗摆成圈，轻轻在里面敲出声音。"], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75 + 50 + 75 + 75, 400, "花园", ["这样 天 就快 亮 了 呀。"], "#eee", "#222")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75 + 50 + 75 + 75 + 50, 400, "花园", ["天边泛起白光，霎时世界和两个小孩的身边被白色包裹。"], "#eee", "#066e00")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return TextBox(1200, 70 + 50 + 50 + 50 + 75 + 50 + 75 + 75 + 50 + 75, 400, "花园", ["月鬼的视野变成流动的液体，死言的脑袋像是被狠狠地敲了一下，两个小孩晕了过去。"], "#eee", "#5c1800")
+                                })
+                                .then(([rect, text]) => WaitForClick(rect, text))
+                                .then(() => {
+                                    return FinishTimeLine("花园")
+                                })
+                        })
+                    })
+                    .then(() => {
+                        return FinishLayer("气体的M9")
+                    })
+            })
+                
+        </script>
+    </body>
+</html>

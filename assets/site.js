@@ -6,7 +6,6 @@ const VIEWS = [
   { id: 'gallery', label: 'Gallery' },
   { id: 'books', label: 'Books' },
   { id: 'shop', label: 'Shop' },
-  { id: 'phantom-limb', label: 'Phantom Limb' },
 ];
 
 const el = (tag, cls, text) => {
@@ -284,7 +283,6 @@ const render = {
     row('books', 'Books', plural(books.length, 'title', 'titles'), 'Printed and digital books.');
     const goods = shown(data.shop.items);
     row('shop', data.shop.title || 'Shop', plural(goods.length, 'item', 'items'), 'Goods, books and prints on sale now.');
-    row('phantom-limb', data.demo.title || 'Phantom Limb', data.demo.url ? 'Playable' : 'Not loaded yet', 'A hypertext visual novel, playable in the browser.');
     frag.append(rooms);
     return frag;
   },
@@ -437,7 +435,7 @@ const render = {
     if (d.url) {
       const p = el('p');
       const a = el('a', 'button', 'Play in the browser');
-      a.href = d.url;
+      a.href = d.url; a.target = '_blank'; a.rel = 'noopener';
       p.append(a); side.append(p);
     } else {
       side.append(el('p', 'empty', 'The demo is not loaded yet. Put its files in the phantom-limb folder, then set the link in the admin.'));
@@ -484,7 +482,7 @@ const render = {
     return frag;
   },
 };
-const HIDDEN = { registry: 'Register' };
+const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb' };
 
 // Music bar in the top-right corner. Tracks come from content/music.json.
 // Browsers refuse to start sound before the visitor has touched the page, so
