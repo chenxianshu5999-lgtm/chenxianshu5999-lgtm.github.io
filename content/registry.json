@@ -26,13 +26,6 @@
     },
     {
       "no": "",
-      "name": "超心理学研究所",
-      "kind": "Institute",
-      "status": "Registered",
-      "note": "研究历史最久，近百年内没有任何成就，所长早就销声匿迹。"
-    },
-    {
-      "no": "",
       "name": "纪井研究室",
       "kind": "Lab",
       "status": "Registered",
