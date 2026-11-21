@@ -46,48 +46,6 @@
     },
     {
       "no": "",
-      "name": "城市建设部",
-      "kind": "Department",
-      "status": "Registered",
-      "note": ""
-    },
-    {
-      "no": "",
-      "name": "创生部",
-      "kind": "Department",
-      "status": "Registered",
-      "note": ""
-    },
-    {
-      "no": "",
-      "name": "降生部",
-      "kind": "Department",
-      "status": "Registered",
-      "note": ""
-    },
-    {
-      "no": "",
-      "name": "市场部",
-      "kind": "Department",
-      "status": "Registered",
-      "note": ""
-    },
-    {
-      "no": "",
-      "name": "保安队",
-      "kind": "Unit",
-      "status": "Registered",
-      "note": ""
-    },
-    {
-      "no": "",
-      "name": "特别行动小组",
-      "kind": "Unit",
-      "status": "Registered",
-      "note": "保卫地下自治区的安全。"
-    },
-    {
-      "no": "",
       "name": "回归",
       "kind": "Project group",
       "status": "Registered",
