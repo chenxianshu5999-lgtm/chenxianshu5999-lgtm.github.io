@@ -88,13 +88,23 @@ const render = {
       const art = el('article', 'work');
       const fig = el('div', 'work-image');
       if (w.image) {
-        const a = el('a');
-        a.href = asset(w.image);
-        a.target = '_blank'; a.rel = 'noopener';
-        a.setAttribute('aria-label', `Open ${w.title || 'image'} at full size`);
+        // Small by default. Large while the pointer is over it; a click keeps it
+        // large, a second click makes it small again.
+        const btn = el('button');
+        btn.type = 'button';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('aria-label', `Enlarge ${w.title || 'image'}`);
         const img = el('img');
         img.src = asset(w.image); img.alt = w.title || ''; img.loading = 'lazy';
-        a.append(img); fig.append(a);
+        btn.append(img); fig.append(btn);
+        btn.addEventListener('click', () => {
+          const open = !fig.classList.contains('is-open');
+          fig.classList.toggle('is-open', open);
+          // After closing, stay small until the pointer has left and come back.
+          fig.classList.toggle('is-shut', !open);
+          btn.setAttribute('aria-pressed', String(open));
+        });
+        fig.addEventListener('mouseleave', () => fig.classList.remove('is-shut'));
       }
       const side = el('div', 'work-side');
       side.append(el('h2', 'work-title', w.title || 'Untitled'));
