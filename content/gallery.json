@@ -575,15 +575,6 @@
       "category": "Oil"
     },
     {
-      "image": "/images/uploads/museum-144.jpg",
-      "title": "无题",
-      "year": "",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Oil"
-    },
-    {
       "image": "/images/uploads/museum-145.jpg",
       "title": "梯子",
       "year": "",
@@ -814,6 +805,15 @@
       "year": "2025",
       "medium": "铅笔、色粉、木炭",
       "size": "木炭纸判",
+      "description": "",
+      "category": "Sketch"
+    },
+    {
+      "image": "/images/uploads/museum-144.jpg",
+      "title": "无题",
+      "year": "",
+      "medium": "",
+      "size": "",
       "description": "",
       "category": "Sketch"
     },
