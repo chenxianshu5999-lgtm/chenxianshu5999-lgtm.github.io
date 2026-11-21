@@ -279,6 +279,12 @@ function readerView(data, id) {
   return frag;
 }
 
+// A click anywhere that is not a text bar puts the bars' borders back.
+document.addEventListener('click', (e) => {
+  if (e.target.closest && e.target.closest('.pane-line')) return;
+  for (const o of document.querySelectorAll('.pane-line.is-current')) o.classList.remove('is-current');
+});
+
 const render = {
   overview(data) {
     const frag = document.createDocumentFragment();
@@ -506,24 +512,44 @@ const render = {
     const img = el('img'); img.src = asset(d.image || '/images/hidden/t0-4.jpg'); img.alt = '';
     fig.append(img);
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    shown(d.lines).forEach((l, i) => {
-      if (!l.text) return;
+    // Same order of events as the demo: a glowing dot first; a click on it
+    // removes the dot and types the bar out. A click on a bar lights its
+    // border, a click anywhere else puts it back.
+    const bars = [];
+    for (const l of shown(d.lines)) {
+      if (!l.text) continue;
       const bar = el('p', 'pane-line');
+      bar.hidden = true;
       bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
       if (l.w) bar.style.width = `${l.w}%`;
       if (l.bg) bar.style.background = l.bg;
       if (l.color) bar.style.color = l.color;
-      fig.append(bar);
-      if (still) { bar.textContent = l.text; return; }
-      // Typed out one character at a time, like the boxes in the demo.
-      const chars = Array.from(l.text);
-      let n = 0;
-      setTimeout(function step() {
-        if (!bar.isConnected) return;
-        bar.textContent = chars.slice(0, ++n).join('');
-        if (n < chars.length) setTimeout(step, 40);
-      }, 700 + i * 500);
-    });
+      bar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        for (const o of bars) o.classList.toggle('is-current', o === bar);
+      });
+      bars.push(bar);
+
+      const dot = el('button', 'pane-dot');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Open');
+      dot.style.left = bar.style.left; dot.style.top = bar.style.top;
+      dot.style.setProperty('--dot', l.dot || l.bg || '#c9d62a');
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dot.remove();
+        bar.hidden = false;
+        if (still) { bar.textContent = l.text; return; }
+        const chars = Array.from(l.text);
+        let n = 0;
+        (function step() {
+          if (!bar.isConnected) return;
+          bar.textContent = chars.slice(0, ++n).join('');
+          if (n < chars.length) setTimeout(step, 40);
+        })();
+      });
+      fig.append(bar, dot);
+    }
     return fig;
   },
 
