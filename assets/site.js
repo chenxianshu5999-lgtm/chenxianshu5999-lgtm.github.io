@@ -502,7 +502,7 @@ const render = {
   // Hidden room: one picture, as large as the window allows.
   t0() {
     const fig = el('div', 'pane');
-    const img = el('img'); img.src = 'images/hidden/t0.jpg'; img.alt = '';
+    const img = el('img'); img.src = 'images/hidden/t0-2.jpg'; img.alt = '';
     fig.append(img);
     return fig;
   },
