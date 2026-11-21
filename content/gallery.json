@@ -35,15 +35,6 @@
       "category": "Illustration"
     },
     {
-      "image": "/images/uploads/museum-084.jpg",
-      "title": "概念",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Illustration"
-    },
-    {
       "image": "/images/uploads/museum-085.jpg",
       "title": "202市立美术馆游记",
       "year": "",
@@ -803,6 +794,15 @@
       "image": "/images/uploads/museum-171.jpg",
       "title": "不严谨人设",
       "year": "",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Draft"
+    },
+    {
+      "image": "/images/uploads/museum-084.jpg",
+      "title": "概念",
+      "year": "2019",
       "medium": "",
       "size": "",
       "description": "",
