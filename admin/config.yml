@@ -83,6 +83,25 @@ collections:
               - { name: description, label: 简介, widget: markdown, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
+      - name: t0
+        label: 隐藏页 T0（一张大图 + 台词条）
+        file: content/t0.json
+        fields:
+          - { name: image, label: 大图, widget: image, required: false }
+          - name: lines
+            label: 台词条（可添加、删除、拖动排序）
+            widget: list
+            required: false
+            summary: "{{fields.text}}"
+            fields:
+              - { name: text, label: 台词, widget: text }
+              - { name: x, label: "左边位置（占图宽的百分比，0–100）", widget: number, value_type: float, default: 10 }
+              - { name: y, label: "上边位置（占图高的百分比，0–100）", widget: number, value_type: float, default: 10 }
+              - { name: w, label: "宽度（占图宽的百分比）", widget: number, value_type: float, default: 25 }
+              - { name: bg, label: "底色（如 #c9d62a）", widget: string, required: false }
+              - { name: color, label: "字色（如 #111111）", widget: string, required: false }
+              - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
+
       - name: shop
         label: Shop（环形塔物贩协会）
         file: content/shop.json

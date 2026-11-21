@@ -499,11 +499,31 @@ const render = {
     return frag;
   },
 
-  // Hidden room: one picture, as large as the window allows.
-  t0() {
-    const fig = el('div', 'pane');
-    const img = el('img'); img.src = 'images/hidden/t0-4.jpg'; img.alt = '';
+  // Hidden room: one picture across the whole width, with lines of text laid
+  // over it as coloured bars (positions are percentages of the picture).
+  t0(data) {
+    const d = data.t0, fig = el('div', 'pane');
+    const img = el('img'); img.src = asset(d.image || '/images/hidden/t0-4.jpg'); img.alt = '';
     fig.append(img);
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    shown(d.lines).forEach((l, i) => {
+      if (!l.text) return;
+      const bar = el('p', 'pane-line');
+      bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
+      if (l.w) bar.style.width = `${l.w}%`;
+      if (l.bg) bar.style.background = l.bg;
+      if (l.color) bar.style.color = l.color;
+      fig.append(bar);
+      if (still) { bar.textContent = l.text; return; }
+      // Typed out one character at a time, like the boxes in the demo.
+      const chars = Array.from(l.text);
+      let n = 0;
+      setTimeout(function step() {
+        if (!bar.isConnected) return;
+        bar.textContent = chars.slice(0, ++n).join('');
+        if (n < chars.length) setTimeout(step, 40);
+      }, 700 + i * 500);
+    });
     return fig;
   },
 
@@ -611,7 +631,7 @@ function startPlayer(music) {
 }
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'screening', 'demo', 'music', 'registry', 'readers'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'screening', 'demo', 'music', 'registry', 'readers', 't0'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
