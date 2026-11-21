@@ -485,15 +485,6 @@
       "category": "Illustration"
     },
     {
-      "image": "/images/uploads/museum-134.jpg",
-      "title": "Pater Noster",
-      "year": "",
-      "medium": "油画",
-      "size": "F6",
-      "description": "",
-      "category": "Oil"
-    },
-    {
       "image": "/images/uploads/museum-135.jpg",
       "title": "Renavgh",
       "year": "",
@@ -814,6 +805,15 @@
       "year": "",
       "medium": "",
       "size": "",
+      "description": "",
+      "category": "Sketch"
+    },
+    {
+      "image": "/images/uploads/museum-134.jpg",
+      "title": "Pater Noster",
+      "year": "",
+      "medium": "油画",
+      "size": "F6",
       "description": "",
       "category": "Sketch"
     },
