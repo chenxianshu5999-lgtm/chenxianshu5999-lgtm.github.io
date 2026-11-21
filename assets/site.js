@@ -414,7 +414,7 @@ const render = {
       const link = g.link || sh.url;
       const card = el(link ? 'a' : 'div', 'good');
       if (link) { card.href = link; card.target = '_blank'; card.rel = 'noopener'; }
-      if (g.image) { const img = el('img'); img.src = asset(g.image); img.alt = ''; img.loading = 'lazy'; card.append(img); }
+      if (g.image) { const img = el('img'); img.referrerPolicy = 'no-referrer'; img.src = asset(g.image); img.alt = ''; img.loading = 'lazy'; card.append(img); }
       card.append(el('span', 'good-name', g.name || 'Untitled'));
       const line = [g.price, g.status].filter(Boolean).join(', ');
       if (line) card.append(el('span', 'good-line', line));

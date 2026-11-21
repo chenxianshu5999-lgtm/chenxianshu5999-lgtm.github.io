@@ -2,5 +2,20 @@
   "title": "环形塔物贩协会",
   "intro": "",
   "url": "https://k.youshop10.com/TN7FbT3S",
-  "items": []
+  "items": [
+    {
+      "image": "https://si.geilicdn.com/wdseller161351401-69db000001a18a97446a0a23111a_1170_1466.jpg?w=800&h=800",
+      "name": "场景钥匙扣",
+      "price": "¥25",
+      "status": "In stock",
+      "link": "https://weidian.com/item.html?itemID=7884662379"
+    },
+    {
+      "image": "https://si.geilicdn.com/ch161351401-2d9f000001a18a4fbe890a2303ee_4032_3024.jpg?w=800&h=800",
+      "name": "A5 文件夹",
+      "price": "¥30",
+      "status": "In stock",
+      "link": "https://weidian.com/item.html?itemID=7884629649"
+    }
+  ]
 }
