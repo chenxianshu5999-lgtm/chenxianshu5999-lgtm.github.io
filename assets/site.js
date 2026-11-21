@@ -440,8 +440,10 @@ const render = {
     } else {
       side.append(el('p', 'empty', 'The demo is not loaded yet. Put its files in the phantom-limb folder, then set the link in the admin.'));
     }
-    if (d.note) side.append(el('p', 'demo-note', d.note));
-    if (d.cover) wrap.append(cover);
+    const foot = el('div', 'demo-foot');
+    if (d.cover) foot.append(cover);
+    if (d.note) foot.append(el('p', 'demo-note', d.note));
+    if (foot.children.length) side.append(foot);
     wrap.append(side);
     frag.append(wrap);
     return frag;

@@ -233,8 +233,11 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
 .good-line { display: block; margin-top: 2px; font-size: 15px; }
 
 /* ---------- phantom limb ---------- */
-.demo { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(240px, 1fr); gap: 32px; align-items: start; }
-.demo-cover img { width: 100%; border: 1px solid var(--rule); }
+.demo { max-width: 760px; }
+.demo-foot { display: flex; gap: 16px; align-items: center; }
+.demo-foot .demo-note { margin: 0; }
+.demo-cover { flex: none; line-height: 0; }
+.demo-cover img { height: 3.3em; width: auto; border: 1px solid var(--rule); }
 .demo-side > * + * { margin-top: 20px; }
 .demo-note { font-size: 15px; color: var(--soft); }
 
