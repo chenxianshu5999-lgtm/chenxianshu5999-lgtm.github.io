@@ -6,6 +6,7 @@ const VIEWS = [
   { id: 'gallery', label: 'Gallery' },
   { id: 'books', label: 'Books' },
   { id: 'shop', label: 'Shop' },
+  { id: 'screening', label: 'Screening Room' },
 ];
 
 const el = (tag, cls, text) => {
@@ -301,6 +302,8 @@ const render = {
     row('books', 'Books', plural(books.length, 'title', 'titles'), 'Printed and digital books.');
     const goods = shown(data.shop.items);
     row('shop', data.shop.title || 'Shop', plural(goods.length, 'item', 'items'), 'Goods, books and prints on sale now.');
+    const films = shown(data.screening.films);
+    if (films.length) row('screening', data.screening.title || 'Screening Room', plural(films.length, 'film', 'films'), 'Moving images.');
     frag.append(rooms);
     return frag;
   },
@@ -442,6 +445,30 @@ const render = {
     return frag;
   },
 
+  screening(data) {
+    const sc = data.screening, frag = document.createDocumentFragment();
+    const films = shown(sc.films);
+    frag.append(head(sc.title || 'Screening Room', sc.intro));
+    if (!films.length) { frag.append(el('p', 'empty', 'Nothing is showing yet.')); return frag; }
+    for (const f of films) {
+      const art = el('article', 'film');
+      const v = el('video');
+      v.controls = true; v.preload = 'metadata'; v.playsInline = true;
+      if (f.poster) v.poster = asset(f.poster);
+      v.src = asset(f.video);
+      if (f.ratio > 0) v.style.aspectRatio = f.ratio;
+      art.append(v);
+      const side = el('div', 'film-side');
+      side.append(el('h3', 'work-title', f.title || 'Untitled'));
+      const fl = fields([['Year', f.year], ['Length', f.length], ['Medium', f.medium]]);
+      if (fl) side.append(fl);
+      if (f.description) { const t = md(f.description); t.classList.add('work-text'); side.append(t); }
+      art.append(side);
+      frag.append(art);
+    }
+    return frag;
+  },
+
   'phantom-limb'(data) {
     const d = data.demo, frag = document.createDocumentFragment();
     frag.append(head(d.title || 'Phantom Limb', d.tagline));
@@ -470,6 +497,14 @@ const render = {
     }
     frag.append(wrap);
     return frag;
+  },
+
+  // Hidden room: one picture, as large as the window allows.
+  t0() {
+    const fig = el('div', 'pane');
+    const img = el('img'); img.src = 'images/hidden/t0.jpg'; img.alt = '';
+    fig.append(img);
+    return fig;
   },
 
   // Hidden room: not in the directory. Reached by tapping the site name three times.
@@ -507,7 +542,9 @@ const render = {
     return frag;
   },
 };
-const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb' };
+const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0' };
+// Hidden rooms that get a row in the left menu, shown only inside the black side.
+const HIDDEN_NAV = ['t0'];
 
 // Music bar in the top-right corner. Tracks come from content/music.json.
 // Browsers refuse to start sound before the visitor has touched the page, so
@@ -574,7 +611,7 @@ function startPlayer(music) {
 }
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music', 'registry', 'readers'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'screening', 'demo', 'music', 'registry', 'readers'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
@@ -588,6 +625,7 @@ function startPlayer(music) {
     gallery: shown(data.gallery.works).length,
     books: shown(data.books.items).length,
     shop: shown(data.shop.items).length,
+    screening: shown(data.screening.films).length,
   };
   const nav = document.getElementById('site-nav');
   for (const v of VIEWS) {
@@ -596,6 +634,15 @@ function startPlayer(music) {
     a.dataset.view = v.id;
     a.append(el('span', 'nav-label', v.id === 'phantom-limb' ? (data.demo.title || v.label) : v.label));
     if (v.id in counts) a.append(el('span', 'nav-count', String(counts[v.id])));
+    // An empty section stays out of the menu until something is in it.
+    if (v.id === 'screening' && !counts.screening) continue;
+    nav.append(a);
+  }
+  for (const id of HIDDEN_NAV) {
+    const a = el('a', 'nav-hidden');
+    a.href = `#${id}`;
+    a.dataset.view = id;
+    a.append(el('span', 'nav-label', HIDDEN[id]));
     nav.append(a);
   }
 

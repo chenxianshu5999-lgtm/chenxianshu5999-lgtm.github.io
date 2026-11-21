@@ -240,6 +240,10 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
 .good-line { display: block; margin-top: 2px; font-size: 15px; }
 
 /* ---------- phantom limb ---------- */
+.film { max-width: 1100px; }
+.film + .film { margin-top: 88px; }
+.film video { display: block; width: 100%; max-height: 80vh; background: #000; }
+.film-side { margin-top: 20px; max-width: 66ch; }
 .demo { display: flex; gap: 20px; align-items: stretch; max-width: 820px; }
 .demo { align-items: flex-start; }
 .demo-cover { flex: none; position: relative; width: 122px; height: 122px; }
@@ -255,6 +259,12 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
   --rule: #ffffff; --sign: #ffffff; --call: #ffffff;
 }
 .is-hidden-room .player { background: #000; }
+.board-nav a.nav-hidden { display: none; }
+.is-hidden-room .board-nav a.nav-hidden { display: flex; }
+body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px solid var(--rule); }
+.view:has(.pane) { max-width: none; padding: 16px; }
+.pane { display: flex; align-items: center; justify-content: center; height: calc(100vh - 32px); }
+.pane img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .is-hidden-room .button { background: #fff; color: #000; border-color: #fff; }
 .is-hidden-room .button:hover { background: #000; color: #fff; }
 .is-hidden-room .player-btn:hover { background: #fff; color: #000; }
@@ -311,6 +321,7 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
   .view { margin-left: 0; padding: 28px 16px 72px; }
   .view-title { font-size: 30px; }
   .demo { gap: 14px; }
+  .pane { height: auto; }
   .demo-cover { width: 96px; height: 96px; }
   .goods { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
   /* the rail becomes a bar along the bottom edge */
