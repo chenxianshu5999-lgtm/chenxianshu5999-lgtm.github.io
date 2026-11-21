@@ -375,3 +375,5 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
   .reg-name { font-size: 18px; }
   .reg-status, .reg-note { grid-column: 2; }
 }
+
+#site-title.is-busy { opacity: 0.45; transition: opacity 0.2s; }

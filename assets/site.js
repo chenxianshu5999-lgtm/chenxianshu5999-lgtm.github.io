@@ -754,17 +754,28 @@ function startPlayer(music) {
 
   // Three quick taps on the site name open the hidden register.
   // One or two taps still go to Overview as usual, which is also the way back out.
+  // The site name: one tap reloads the page with fresh copies of the code and
+  // content (the host lets browsers keep old copies for ten minutes); three
+  // quick taps open the hidden register.
   const name = document.getElementById('site-title');
-  let taps = 0, last = 0;
+  let taps = 0, last = 0, wait = 0;
   name.addEventListener('click', (e) => {
+    e.preventDefault();
     const now = Date.now();
     taps = now - last < 600 ? taps + 1 : 1;
     last = now;
-    if (taps >= 3) {
-      taps = 0;
-      e.preventDefault();
-      location.hash = 'registry';
-    }
+    clearTimeout(wait);
+    if (taps >= 3) { taps = 0; location.hash = 'registry'; return; }
+    wait = setTimeout(() => { if (taps === 1) freshReload(); taps = 0; }, 600);
   });
+  async function freshReload() {
+    name.classList.add('is-busy');
+    const own = performance.getEntriesByType('resource').map((r) => r.name)
+      .filter((u) => u.startsWith(location.origin) && /\.(js|css|json)(\?|$)/.test(u));
+    for (const n of document.querySelectorAll('script[src], link[rel=stylesheet]')) own.push(n.src || n.href);
+    own.push(location.origin + location.pathname);
+    await Promise.all(own.map((u) => fetch(u, { cache: 'reload' }).catch(() => {})));
+    location.reload();
+  }
   startPlayer(data.music);
 })();
