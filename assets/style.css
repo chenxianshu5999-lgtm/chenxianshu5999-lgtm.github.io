@@ -58,6 +58,9 @@ ul { padding: 0; list-style: none; }
 .board-name {
   font-weight: 700; font-size: 26px; line-height: 1.1; letter-spacing: -0.01em;
   color: var(--ink); text-decoration: none;
+  /* tapped three times to open the register: no zoom, no text selection */
+  touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .board-nav { margin-top: 36px; display: flex; flex-direction: column; }
 .board-nav a {
@@ -162,6 +165,24 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
 .demo-side > * + * { margin-top: 20px; }
 .demo-note { font-size: 15px; color: var(--soft); }
 
+/* ---------- hidden room: the register. Same sheet, lights off. ---------- */
+.is-hidden-room {
+  --wall: #000000; --sheet: #000000; --ink: #ffffff; --soft: #ffffff;
+  --rule: #ffffff; --sign: #ffffff; --call: #ffffff;
+}
+.is-hidden-room .player { background: #000; }
+.is-hidden-room .player-btn:hover { background: #fff; color: #000; }
+.reg-tally { margin: -8px 0 28px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.reg { max-width: 860px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+.reg-row {
+  display: grid; grid-template-columns: 5ch minmax(0, 1fr) auto; gap: 2px 20px; align-items: baseline;
+  padding: 14px 0; border-bottom: 1px solid var(--rule);
+}
+.reg-no { font-size: 15px; font-variant-numeric: tabular-nums; }
+.reg-name { font-size: 20px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.reg-status { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.reg-note { grid-column: 2 / -1; font-size: 15px; max-width: 60ch; }
+
 /* ---------- music bar, top right ---------- */
 .player {
   position: fixed; top: 16px; right: 24px; z-index: 4;
@@ -208,4 +229,7 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
   .book { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; }
   .book-title, .work-title { font-size: 22px; }
   .rooms .room-name { font-size: 20px; }
+  .reg-row { grid-template-columns: 4ch minmax(0, 1fr); gap: 2px 12px; }
+  .reg-name { font-size: 18px; }
+  .reg-status, .reg-note { grid-column: 2; }
 }

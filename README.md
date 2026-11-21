@@ -24,3 +24,7 @@ python3 -m http.server 8000
 ## 改外观
 
 颜色和字体都在 `assets/style.css` 顶部的 `:root` 里。左侧色条的颜色也可以直接在后台「基本设置」改。字体 Atkinson Hyperlegible 和 Markdown 解析器 marked 都放在 `assets/` 里，不依赖外部 CDN。
+
+## 隐藏页
+
+连点三下左上角的网站名（Substanz）会进入 Register：莫比斯小机构登记列表，黑底白字。点一下网站名回到 Overview。条目在后台「Register」里维护，内容在 `content/registry.json`。

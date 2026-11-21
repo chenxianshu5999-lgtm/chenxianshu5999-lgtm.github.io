@@ -1,5 +1,5 @@
 // Public pages. Everything shown here comes from content/*.json, which the
-// admin at /admin/ edits. Four views, switched by the #hash in the address.
+// admin at /admin/ edits. Views are switched by the #hash in the address.
 
 const VIEWS = [
   { id: 'overview', label: 'Overview' },
@@ -187,7 +187,36 @@ const render = {
     frag.append(wrap);
     return frag;
   },
+
+  // Hidden room: not in the directory. Reached by tapping the site name three times.
+  registry(data) {
+    const r = data.registry, frag = document.createDocumentFragment();
+    const entries = shown(r.entries);
+    frag.append(head(r.title || 'Mobius: Register of Minor Bodies', r.intro));
+    if (!entries.length) {
+      frag.append(el('p', 'empty', 'Nothing is registered yet. Add an entry from the admin under Register.'));
+      return frag;
+    }
+    const tally = {};
+    for (const e of entries) { const k = e.status || 'Registered'; tally[k] = (tally[k] || 0) + 1; }
+    frag.append(el('p', 'reg-tally', Object.entries(tally).map(([k, n]) => `${k} ${n}`).join(' / ')));
+    const list = el('ol', 'reg');
+    entries.forEach((e, i) => {
+      const li = el('li', 'reg-row');
+      li.append(
+        el('span', 'reg-no', e.no || String(i + 1).padStart(3, '0')),
+        el('span', 'reg-name', e.name || 'Unnamed'),
+        el('span', 'reg-status', e.status || 'Registered'),
+      );
+      const sub = [e.kind, e.note].filter(Boolean).join('. ');
+      if (sub) li.append(el('span', 'reg-note', sub));
+      list.append(li);
+    });
+    frag.append(list);
+    return frag;
+  },
 };
+const HIDDEN = { registry: 'Register' };
 
 // Music bar in the top-right corner. Tracks come from content/music.json.
 // Browsers refuse to start sound before the visitor has touched the page, so
@@ -254,7 +283,7 @@ function startPlayer(music) {
 }
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music', 'registry'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
@@ -297,12 +326,28 @@ function startPlayer(music) {
       if (a.dataset.view === current) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     }
-    const label = VIEWS.find((v) => v.id === current).label;
+    const label = HIDDEN[current] || VIEWS.find((v) => v.id === current).label;
+    document.body.classList.toggle('is-hidden-room', current in HIDDEN);
     document.title = current === 'overview' ? (s.title || 'Substanz') : `${label} | ${s.title || 'Substanz'}`;
     if (!first) { window.scrollTo(0, 0); view.focus({ preventScroll: true }); }
     first = false;
   }
   window.addEventListener('hashchange', show);
   show();
+
+  // Three quick taps on the site name open the hidden register.
+  // One or two taps still go to Overview as usual, which is also the way back out.
+  const name = document.getElementById('site-title');
+  let taps = 0, last = 0;
+  name.addEventListener('click', (e) => {
+    const now = Date.now();
+    taps = now - last < 600 ? taps + 1 : 1;
+    last = now;
+    if (taps >= 3) {
+      taps = 0;
+      e.preventDefault();
+      location.hash = 'registry';
+    }
+  });
   startPlayer(data.music);
 })();
