@@ -434,17 +434,22 @@ const render = {
     if (d.description) side.append(md(d.description));
     if (d.url) {
       const p = el('p');
-      const a = el('a', 'button', 'Play in the browser');
+      const a = el('a', 'button', 'Play the demo');
       a.href = d.url; a.target = '_blank'; a.rel = 'noopener';
       p.append(a); side.append(p);
     } else {
       side.append(el('p', 'empty', 'The demo is not loaded yet. Put its files in the phantom-limb folder, then set the link in the admin.'));
     }
-    const foot = el('div', 'demo-foot');
-    if (d.cover) foot.append(cover);
-    if (d.note) foot.append(el('p', 'demo-note', d.note));
-    if (foot.children.length) side.append(foot);
+    if (d.note) side.append(el('p', 'demo-note', d.note));
+    if (d.cover) wrap.append(cover);
     wrap.append(side);
+    // The cover is a square exactly as tall as the button and the note beside it.
+    if (d.cover && window.ResizeObserver) {
+      new ResizeObserver(() => {
+        const wide = window.matchMedia('(min-width: 821px)').matches;
+        cover.style.width = cover.style.height = wide ? side.offsetHeight + 'px' : '';
+      }).observe(side);
+    }
     frag.append(wrap);
     return frag;
   },
