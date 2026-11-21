@@ -173,6 +173,7 @@ function readerView(data, id) {
     paintLangs();
     pagesBox.replaceChildren();
     const base = `books/${id}/${version.lang}/`;
+    const rev = meta.rev ? `?v=${meta.rev}` : ''; // changes whenever pages are replaced, so old copies are not reused
     const n = version.pages.length;
     const upto = key ? n : Math.min(n, version.free);
     const boxes = [];
@@ -180,7 +181,7 @@ function readerView(data, id) {
       const box = pageBox(i);
       if (i <= version.free) {
         const img = el('img');
-        img.src = `${base}p${String(i).padStart(2, '0')}.jpg`;
+        img.src = `${base}p${String(i).padStart(2, '0')}.jpg${rev}`;
         img.alt = `Page ${i}`; img.loading = 'lazy';
         box.append(img);
       }
@@ -191,7 +192,7 @@ function readerView(data, id) {
     // locked pages: fetch, decrypt, show, one after another
     for (let i = version.free + 1; i <= upto; i++) {
       try {
-        const res = await fetch(`${base}p${String(i).padStart(2, '0')}.bin`);
+        const res = await fetch(`${base}p${String(i).padStart(2, '0')}.bin${rev}`);
         const plain = await openWith(meta, key, new Uint8Array(await res.arrayBuffer()));
         if (mine !== run) return;
         const url = URL.createObjectURL(new Blob([plain], { type: 'image/jpeg' }));
