@@ -125,7 +125,30 @@ ul { padding: 0; list-style: none; }
 .rooms .room-count { color: var(--soft); font-variant-numeric: tabular-nums; }
 .rooms .room-note { grid-column: 1 / -1; color: var(--soft); max-width: 60ch; }
 
-/* ---------- gallery: image, details, note. No frames. ---------- */
+/* ---------- gallery: works by category, with a rail on the right ---------- */
+.gallery { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 0 40px; align-items: start; }
+.g-section { scroll-margin-top: 24px; }
+.g-section + .g-section { margin-top: 96px; }
+.g-head {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 36px;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.g-count { font-variant-numeric: tabular-nums; }
+.rail { position: sticky; top: 96px; display: flex; flex-direction: column; }
+.rail-item {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 8px 0; border: 0; border-top: 1px solid var(--rule); background: none;
+  font: inherit; font-size: 15px; color: var(--ink); text-align: left; cursor: pointer;
+}
+.rail-item:last-child { border-bottom: 1px solid var(--rule); }
+.rail-item:hover .rail-label { text-decoration: underline; text-underline-offset: 3px; }
+.rail-count { font-size: 13px; font-variant-numeric: tabular-nums; }
+.rail-item[aria-current="true"] .rail-label::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px;
+  border-radius: 50%; background: var(--call); vertical-align: 1px;
+}
+
+/* image, details, note. No frames. */
 .work { max-width: 860px; }
 .work-side { margin-top: 20px; max-width: 66ch; }
 .work + .work { margin-top: 88px; }
@@ -233,6 +256,17 @@ a.good:hover .good-name { text-decoration: underline; text-underline-offset: 3px
   .view-title { font-size: 30px; }
   .demo { grid-template-columns: 1fr; gap: 18px; }
   .goods { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+  /* the rail becomes a bar along the bottom edge */
+  .gallery { display: block; }
+  .g-section { scroll-margin-top: 110px; }
+  .g-section + .g-section { margin-top: 64px; }
+  .rail {
+    position: fixed; inset: auto 0 0 0; z-index: 3; top: auto;
+    flex-direction: row; justify-content: space-around;
+    padding: 0 8px env(safe-area-inset-bottom); background: var(--wall); border-top: 1px solid var(--rule);
+  }
+  .rail-item, .rail-item:last-child { border: 0; padding: 12px 4px; font-size: 14px; }
+  .rail-count { display: none; }
   .work-side { margin-top: 16px; }
   .work + .work { margin-top: 56px; }
   .book { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; }

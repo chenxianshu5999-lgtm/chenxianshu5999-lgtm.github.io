@@ -48,6 +48,52 @@ function fields(pairs) {
   return dl.children.length ? dl : null;
 }
 
+const CATEGORIES = ['Oil', 'Illustration', 'Sketch', 'Draft'];
+
+// One work: image (small; a click enlarges it, a second click makes it small again),
+// then title, details and note underneath.
+function workCard(w) {
+  const art = el('article', 'work');
+  const fig = el('div', 'work-image');
+  if (w.image) {
+    const btn = el('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.setAttribute('aria-label', `Enlarge ${w.title || 'image'}`);
+    const img = el('img');
+    img.src = asset(w.image); img.alt = w.title || ''; img.loading = 'lazy';
+    btn.append(img); fig.append(btn);
+    btn.addEventListener('click', () => {
+      const open = !fig.classList.contains('is-open');
+      fig.classList.toggle('is-open', open);
+      btn.setAttribute('aria-pressed', String(open));
+    });
+  }
+  const side = el('div', 'work-side');
+  side.append(el('h3', 'work-title', w.title || 'Untitled'));
+  const f = fields([['Year', w.year], ['Medium', w.medium], ['Size', w.size]]);
+  if (f) side.append(f);
+  if (w.description) { const t = md(w.description); t.classList.add('work-text'); side.append(t); }
+  art.append(fig, side);
+  return art;
+}
+
+// Marks, in the gallery rail, the category currently on screen.
+function spyRail() {
+  const items = document.querySelectorAll('.rail-item');
+  if (!items.length) return;
+  const line = window.innerHeight * 0.35;
+  let current = items[0].dataset.target;
+  for (const it of items) {
+    const sec = document.getElementById(it.dataset.target);
+    if (sec && sec.getBoundingClientRect().top <= line) current = it.dataset.target;
+  }
+  for (const it of items) {
+    if (it.dataset.target === current) it.setAttribute('aria-current', 'true');
+    else it.removeAttribute('aria-current');
+  }
+}
+
 const render = {
   overview(data) {
     const frag = document.createDocumentFragment();
@@ -84,32 +130,37 @@ const render = {
       frag.append(el('p', 'empty', 'No works are filed here yet. Add one from the admin under Gallery.'));
       return frag;
     }
-    for (const w of works) {
-      const art = el('article', 'work');
-      const fig = el('div', 'work-image');
-      if (w.image) {
-        // Small by default. A click enlarges it, a second click makes it small again.
-        const btn = el('button');
-        btn.type = 'button';
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', `Enlarge ${w.title || 'image'}`);
-        const img = el('img');
-        img.src = asset(w.image); img.alt = w.title || ''; img.loading = 'lazy';
-        btn.append(img); fig.append(btn);
-        btn.addEventListener('click', () => {
-          const open = !fig.classList.contains('is-open');
-          fig.classList.toggle('is-open', open);
-          btn.setAttribute('aria-pressed', String(open));
-        });
-      }
-      const side = el('div', 'work-side');
-      side.append(el('h2', 'work-title', w.title || 'Untitled'));
-      const f = fields([['Year', w.year], ['Medium', w.medium], ['Size', w.size]]);
-      if (f) side.append(f);
-      if (w.description) { const t = md(w.description); t.classList.add('work-text'); side.append(t); }
-      art.append(fig, side);
-      frag.append(art);
-    }
+    // Works are grouped by category, in the order given in gallery.json.
+    // Anything without a known category goes last, under Other.
+    const order = (data.gallery.categories && data.gallery.categories.length) ? data.gallery.categories : CATEGORIES;
+    const groups = order.map((c) => ({ label: c, works: works.filter((w) => w.category === c) }));
+    const rest = works.filter((w) => !order.includes(w.category));
+    if (rest.length) groups.push({ label: 'Other', works: rest });
+    const filled = groups.filter((g) => g.works.length);
+
+    const wrap = el('div', 'gallery');
+    const main = el('div', 'gallery-main');
+    const rail = el('nav', 'rail');
+    rail.setAttribute('aria-label', 'Categories');
+
+    filled.forEach((g, i) => {
+      const sec = el('section', 'g-section');
+      sec.id = `g-${i}`;
+      const h = el('h2', 'g-head');
+      h.append(el('span', '', g.label), el('span', 'g-count', String(g.works.length)));
+      sec.append(h);
+      for (const w of g.works) sec.append(workCard(w));
+      main.append(sec);
+
+      const b = el('button', 'rail-item');
+      b.type = 'button';
+      b.dataset.target = sec.id;
+      b.append(el('span', 'rail-label', g.label), el('span', 'rail-count', String(g.works.length)));
+      b.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      rail.append(b);
+    });
+    wrap.append(main, rail);
+    frag.append(wrap);
     return frag;
   },
 
@@ -337,8 +388,17 @@ function startPlayer(music) {
     document.title = current === 'overview' ? (s.title || 'Substanz') : `${label} | ${s.title || 'Substanz'}`;
     if (!first) { window.scrollTo(0, 0); view.focus({ preventScroll: true }); }
     first = false;
+    spyRail();
   }
   window.addEventListener('hashchange', show);
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; spyRail(); });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
   show();
 
   // Three quick taps on the site name open the hidden register.
