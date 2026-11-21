@@ -162,11 +162,35 @@ const render = {
       track.append(el('span', 'rail-fill'));
       b.append(track, el('span', 'rail-label', g.label), el('span', 'rail-count', String(g.works.length)));
       b.addEventListener('click', (e) => {
-        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
         if (e.detail > 0) b.blur(); // pointer click: no focus ring left behind
+        if (rail.dataset.scrubbed) { delete rail.dataset.scrubbed; return; }
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       rail.append(b);
     });
+
+    // The rail doubles as the page's scrollbar: press or drag inside the long
+    // (current) segment to move through that category.
+    let scrub = null;
+    const scrubTo = (y) => {
+      const r = scrub.item.getBoundingClientRect();
+      const f = Math.min(1, Math.max(0, (y - r.top) / Math.max(1, r.height)));
+      const s = scrub.sec.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + s.top - (window.innerHeight * 0.35 - f * s.height));
+    };
+    rail.addEventListener('pointerdown', (e) => {
+      const item = e.target.closest('.rail-item');
+      if (!item || item.getAttribute('aria-current') !== 'true' || e.button) return;
+      scrub = { item, sec: document.getElementById(item.dataset.target) };
+      rail.dataset.scrubbed = '1';
+      rail.setPointerCapture(e.pointerId);
+      scrubTo(e.clientY);
+      e.preventDefault();
+    });
+    rail.addEventListener('pointermove', (e) => { if (scrub) scrubTo(e.clientY); });
+    const endScrub = () => { scrub = null; setTimeout(() => delete rail.dataset.scrubbed, 0); };
+    rail.addEventListener('pointerup', endScrub);
+    rail.addEventListener('pointercancel', endScrub);
     wrap.append(main, rail);
     frag.append(wrap);
     return frag;
@@ -393,6 +417,7 @@ function startPlayer(music) {
     }
     const label = HIDDEN[current] || VIEWS.find((v) => v.id === current).label;
     document.body.classList.toggle('is-hidden-room', current in HIDDEN);
+    document.documentElement.classList.toggle('has-rail', !!view.querySelector('.rail'));
     document.title = current === 'overview' ? (s.title || 'Substanz') : `${label} | ${s.title || 'Substanz'}`;
     if (!first) { window.scrollTo(0, 0); view.focus({ preventScroll: true }); }
     first = false;
