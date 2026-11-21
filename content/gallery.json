@@ -557,15 +557,6 @@
       "category": "Oil"
     },
     {
-      "image": "/images/uploads/museum-143.jpg",
-      "title": "自画像",
-      "year": "",
-      "medium": "",
-      "size": "",
-      "description": "镜中的自己竟是如此难以凝聚成确切的形象。我说这可不是我眼神不好，这镜子真的是这样的，被谁调焦距了啊？",
-      "category": "Oil"
-    },
-    {
       "image": "/images/uploads/museum-145.jpg",
       "title": "梯子",
       "year": "",
@@ -815,6 +806,15 @@
       "medium": "油画",
       "size": "F6",
       "description": "",
+      "category": "Sketch"
+    },
+    {
+      "image": "/images/uploads/museum-143.jpg",
+      "title": "自画像",
+      "year": "",
+      "medium": "",
+      "size": "",
+      "description": "镜中的自己竟是如此难以凝聚成确切的形象。我说这可不是我眼神不好，这镜子真的是这样的，被谁调焦距了啊？",
       "category": "Sketch"
     },
     {
