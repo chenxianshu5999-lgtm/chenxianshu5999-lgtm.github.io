@@ -307,7 +307,7 @@ const render = {
     row('gallery', 'Gallery', plural(works.length, 'work', 'works'), 'Paintings, prints and drawings.');
     row('books', 'Books', plural(books.length, 'title', 'titles'), 'Printed and digital books.');
     const goods = shown(data.shop.items);
-    row('shop', data.shop.title || 'Shop', plural(goods.length, 'item', 'items'), 'Goods, books and prints on sale now.');
+    row('shop', 'Shop', plural(goods.length, 'item', 'items'), 'Goods, books and prints on sale now.');
     const films = shown(data.screening.films);
     if (films.length) row('screening', data.screening.title || 'Screening Room', plural(films.length, 'film', 'films'), 'Moving images.');
     frag.append(rooms);
