@@ -563,7 +563,14 @@ const render = {
     // On a phone the picture fills the height and pans sideways; start with
     // the figure in the middle of the screen.
     requestAnimationFrame(() => {
-      if (wrap.scrollWidth > wrap.clientWidth) wrap.scrollLeft = fig.offsetWidth * (d.focus || 0.33) - wrap.clientWidth / 2;
+      if (wrap.scrollWidth <= wrap.clientWidth) return;
+      wrap.scrollLeft = fig.offsetWidth * (d.focus || 0.33) - wrap.clientWidth / 2;
+      // Then slide the page down so the whole picture is on screen; the top
+      // bar stays where it is, one swipe up.
+      setTimeout(() => {
+        if (!wrap.isConnected) return;
+        window.scrollTo({ top: wrap.getBoundingClientRect().top + window.scrollY, behavior: still ? 'auto' : 'smooth' });
+      }, 350);
     });
     return wrap;
   },
