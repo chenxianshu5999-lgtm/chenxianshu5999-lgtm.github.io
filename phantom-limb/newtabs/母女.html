@@ -2,9 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
         <title>A-2</title>
         <script src="../js/konva.js"></script>
+        <script src="../js/touch.js?v=2611220726"></script>
         <style>
             html, body {
                 margin: 0;
@@ -31,6 +32,10 @@
                 display: block;
                 aspect-ratio: 19/10;
             }
+            /* web version: phones */
+            html, body { overscroll-behavior: none; touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+            #game { position: fixed; height: 100dvh; }
+            #rotate-note { position: fixed; inset: 0; z-index: 100000; display: none; align-items: center; justify-content: center; background: #000; color: #fff; font: 16px sans-serif; letter-spacing: 0.1em; }
         </style>
     </head>
     <body>
@@ -38,7 +43,7 @@
         
         
         <script src="../js/game.js"></script>
-        <script src="../js/fit.js"></script>
+        <script src="../js/fit.js?v=2611220726"></script>
         <script>
             JustLayer("母女", () => {
                 return new Promise((resolve) => {
