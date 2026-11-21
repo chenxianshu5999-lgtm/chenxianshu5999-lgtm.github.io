@@ -4,38 +4,269 @@
   "entries": [
     {
       "no": "",
-      "name": "中译中委员会",
-      "kind": "",
+      "name": "萨博斯坦第三医院（Substanz）",
+      "kind": "Hospital",
       "status": "Registered",
-      "note": ""
+      "note": "临床、样本收集。脑科学研究，心理互助小组。"
+    },
+    {
+      "no": "",
+      "name": "莫比斯认知神经心理研究院",
+      "kind": "Institute",
+      "status": "Registered",
+      "note": "科研用，迎合社会对内心探索的需要。"
+    },
+    {
+      "no": "",
+      "name": "伦理委员会",
+      "kind": "Committee",
+      "status": "Registered",
+      "note": "管控人工智能、神经转移、基因克隆三大技术，是科学发展的阀门。"
+    },
+    {
+      "no": "",
+      "name": "超心理学研究所",
+      "kind": "Institute",
+      "status": "Registered",
+      "note": "研究历史最久，近百年内没有任何成就，所长早就销声匿迹。"
+    },
+    {
+      "no": "",
+      "name": "纪井研究室",
+      "kind": "Lab",
+      "status": "Registered",
+      "note": "无机语言学。"
     },
     {
       "no": "",
       "name": "メタモルフォーゼ部",
-      "kind": "",
+      "kind": "Department",
+      "status": "Registered",
+      "note": "记录“变身”。24小时昼夜不停地穿梭于各个科室。"
+    },
+    {
+      "no": "",
+      "name": "城市建设部",
+      "kind": "Department",
       "status": "Registered",
       "note": ""
+    },
+    {
+      "no": "",
+      "name": "创生部",
+      "kind": "Department",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "降生部",
+      "kind": "Department",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "市场部",
+      "kind": "Department",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "保安队",
+      "kind": "Unit",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "特别行动小组",
+      "kind": "Unit",
+      "status": "Registered",
+      "note": "保卫地下自治区的安全。"
+    },
+    {
+      "no": "",
+      "name": "回归",
+      "kind": "Project group",
+      "status": "Registered",
+      "note": "对抗实验项目组，进行神学研究。"
+    },
+    {
+      "no": "",
+      "name": "再临推算器开发小组",
+      "kind": "Project group",
+      "status": "Registered",
+      "note": "再临推算器被用于复现、还原、回忆。并非时空穿梭机。"
+    },
+    {
+      "no": "",
+      "name": "社会形态自然演变模拟项目",
+      "kind": "Project",
+      "status": "Registered",
+      "note": "社会学部与计算机协会联合打造的科研用电脑软件。"
+    },
+    {
+      "no": "",
+      "name": "中译中委员会",
+      "kind": "Committee",
+      "status": "Registered",
+      "note": "由中译中爱好者构成，旨在将私人语言转换，向大众传播。入会筛选为反向图灵测试。"
     },
     {
       "no": "",
       "name": "當代繪畫批評社",
-      "kind": "",
+      "kind": "Society",
       "status": "Registered",
-      "note": ""
+      "note": "评价谱系制作。目前只有一个人在运营，其他人只是偶尔来这里吹吹空调。"
+    },
+    {
+      "no": "",
+      "name": "解域用团体",
+      "kind": "Group",
+      "status": "Registered",
+      "note": "不知道那个人为什么如此执着于打造一片花园。"
+    },
+    {
+      "no": "",
+      "name": "疯人船",
+      "kind": "Group",
+      "status": "Registered",
+      "note": "在地下生态活跃的人类团体，热爱聚众游行、艺术沙龙。"
     },
     {
       "no": "",
       "name": "脑天然",
-      "kind": "",
+      "kind": "Publication",
+      "status": "Registered",
+      "note": "《退行脑天然》，公司的长期杂志连载专栏。脑天然是一种四足球形生物，质量很小。"
+    },
+    {
+      "no": "",
+      "name": "活字印刷仪",
+      "kind": "Machine",
+      "status": "Registered",
+      "note": "喜欢拼一些句子但是逻辑很破碎的机器，现在在科技馆。"
+    },
+    {
+      "no": "",
+      "name": "202市立美术馆",
+      "kind": "Museum",
+      "status": "Registered",
+      "note": "建馆人岁汾，常驻策展人若万重。"
+    },
+    {
+      "no": "",
+      "name": "市立图书馆",
+      "kind": "Library",
+      "status": "Registered",
+      "note": "电子图书馆，一切书目共享批注。"
+    },
+    {
+      "no": "",
+      "name": "行星组曲精华艺文中心",
+      "kind": "Centre",
       "status": "Registered",
       "note": ""
     },
     {
       "no": "",
-      "name": "活字印刷仪",
-      "kind": "",
+      "name": "地下城",
+      "kind": "Facility",
+      "status": "Registered",
+      "note": "纵深约300米，共七层。博物馆开放寄存业务。"
+    },
+    {
+      "no": "",
+      "name": "氕叶斯太空望远镜",
+      "kind": "Facility",
+      "status": "Registered",
+      "note": "莫比斯科技持股建设的非公开太空望远镜。"
+    },
+    {
+      "no": "",
+      "name": "格陵兰岛近海分部",
+      "kind": "Branch",
+      "status": "Registered",
+      "note": "用18年的时间从赤道附近热带海域漂转到格陵兰岛周围。"
+    },
+    {
+      "no": "",
+      "name": "湿地分部",
+      "kind": "Branch",
+      "status": "Registered",
+      "note": "稀有植物育种，昆虫学推广，和一些杂交实验。"
+    },
+    {
+      "no": "",
+      "name": "南山",
+      "kind": "Site",
+      "status": "Registered",
+      "note": "热带雨林气候样本区。"
+    },
+    {
+      "no": "",
+      "name": "瞭望塔站点",
+      "kind": "Site",
+      "status": "Registered",
+      "note": "莫比斯在世界各处建立的站点，多是围绕世界景色的瞭望塔。"
+    },
+    {
+      "no": "",
+      "name": "自然学校",
+      "kind": "School",
       "status": "Registered",
       "note": ""
+    },
+    {
+      "no": "",
+      "name": "大脑子工坊",
+      "kind": "Workshop",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "画厂",
+      "kind": "Workshop",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "四角爬咖啡",
+      "kind": "Café",
+      "status": "Registered",
+      "note": ""
+    },
+    {
+      "no": "",
+      "name": "梵音咖啡厅",
+      "kind": "Café",
+      "status": "Registered",
+      "note": "东南亚连锁咖啡厅，很受年轻人欢迎。"
+    },
+    {
+      "no": "",
+      "name": "白理生物科技有限公司",
+      "kind": "Company",
+      "status": "Registered",
+      "note": "白理制药。可穿戴智能设备及其自助医疗系统。成员很大一部分是曾经莫比斯的科研工作者。"
+    },
+    {
+      "no": "",
+      "name": "PoLar Inc.",
+      "kind": "Company",
+      "status": "Registered",
+      "note": "极地品牌。服饰、饮食、印刷出版等行业均有涉猎。"
+    },
+    {
+      "no": "",
+      "name": "姜潮生",
+      "kind": "Company",
+      "status": "Registered",
+      "note": "设计公司。手握很多设计专利但快破产了。"
     }
   ]
 }
