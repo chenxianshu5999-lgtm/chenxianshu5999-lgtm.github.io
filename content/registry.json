@@ -7,7 +7,8 @@
       "name": "萨博斯坦第三医院（Substanz）",
       "kind": "Hospital",
       "status": "Registered",
-      "note": "临床、样本收集。脑科学研究，心理互助小组。"
+      "note": "临床、样本收集。脑科学研究，心理互助小组。",
+      "link": "#overview"
     },
     {
       "no": "",
@@ -112,7 +113,8 @@
       "name": "202市立美术馆",
       "kind": "Museum",
       "status": "Registered",
-      "note": "建馆人岁汾，常驻策展人若万重。"
+      "note": "建馆人岁汾，常驻策展人若万重。",
+      "link": "#gallery"
     },
     {
       "no": "",
