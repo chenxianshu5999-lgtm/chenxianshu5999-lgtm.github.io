@@ -71,24 +71,6 @@
       "category": "Illustration"
     },
     {
-      "image": "/images/uploads/museum-088.jpg",
-      "title": "概念（1）",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Illustration"
-    },
-    {
-      "image": "/images/uploads/museum-089.jpg",
-      "title": "概念（2）",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Illustration"
-    },
-    {
       "image": "/images/uploads/museum-090.jpg",
       "title": "会面",
       "year": "",
@@ -821,6 +803,24 @@
       "image": "/images/uploads/museum-171.jpg",
       "title": "不严谨人设",
       "year": "",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Draft"
+    },
+    {
+      "image": "/images/uploads/museum-088.jpg",
+      "title": "概念（1）",
+      "year": "2019",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Draft"
+    },
+    {
+      "image": "/images/uploads/museum-089.jpg",
+      "title": "概念（2）",
+      "year": "2019",
       "medium": "",
       "size": "",
       "description": "",
