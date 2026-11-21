@@ -126,8 +126,8 @@ ul { padding: 0; list-style: none; }
 .rooms .room-note { grid-column: 1 / -1; color: var(--soft); max-width: 60ch; }
 
 /* ---------- gallery: works by category, with a rail on the right ---------- */
-/* The rail sits on the window's right edge and stands in for the scrollbar there. */
-.gallery { padding-right: clamp(0px, calc(1340px - 100vw), 176px); }
+/* The rail stands in for the scrollbar, set in from the window's right edge. */
+.gallery { --rail-inset: clamp(24px, 6.5vw, 110px); padding-right: calc(var(--rail-inset) + 96px); }
 .g-section { scroll-margin-top: 24px; }
 .g-section + .g-section { margin-top: 96px; }
 .g-head {
@@ -136,7 +136,7 @@ ul { padding: 0; list-style: none; }
 }
 .g-count { font-variant-numeric: tabular-nums; }
 .rail {
-  position: fixed; top: 16px; bottom: 16px; right: 5px; z-index: 2; width: 160px;
+  position: fixed; top: 16px; bottom: 16px; right: var(--rail-inset); z-index: 2; width: 160px;
   display: flex; flex-direction: column; touch-action: none;
 }
 .has-player .rail { top: 64px; }
