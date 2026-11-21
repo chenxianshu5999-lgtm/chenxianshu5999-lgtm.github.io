@@ -406,7 +406,7 @@ const render = {
       p.append(a); frag.append(p);
     }
     if (!items.length) {
-      frag.append(el('p', 'empty', 'Nothing is listed here yet. Add what is on sale from the admin under Shop.'));
+      if (!sh.url) frag.append(el('p', 'empty', 'Nothing is listed here yet. Add what is on sale from the admin under Shop.'));
       return frag;
     }
     const grid = el('div', 'goods');
