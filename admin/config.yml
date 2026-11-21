@@ -33,7 +33,7 @@ collections:
             fields:
               - { name: image, label: 图片, widget: image }
               - { name: title, label: 标题, widget: string, required: false }
-              - { name: category, label: "分类（Oil 油画 / Illustration 插图 / Sketch 速写 / Draft 草图）", widget: select, options: [Oil, Illustration, Sketch, Draft], default: Illustration, required: false }
+              - { name: category, label: "分类（Oil 油画 / Illustration 插图 / Sketch 速写 / Draft 草图 / Concept 概念）", widget: select, options: [Oil, Illustration, Sketch, Draft, Concept], default: Illustration, required: false }
               - { name: year, label: 年份, widget: string, required: false }
               - { name: medium, label: "材料（如 Oil on canvas）", widget: string, required: false }
               - { name: size, label: "尺寸（如 F60, 130.3 × 97 cm）", widget: string, required: false }

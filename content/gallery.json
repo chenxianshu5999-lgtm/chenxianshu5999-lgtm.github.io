@@ -4,7 +4,8 @@
     "Oil",
     "Illustration",
     "Sketch",
-    "Draft"
+    "Draft",
+    "Concept"
   ],
   "works": [
     {
@@ -14,7 +15,8 @@
       "medium": "",
       "size": "",
       "description": "K000希望自己是一位在古希腊求学的学生，同时手握自己打磨的利剑，足以斩开荆棘与迷雾。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.7033
     },
     {
       "image": "/images/uploads/museum-082.jpg",
@@ -23,7 +25,8 @@
       "medium": "",
       "size": "",
       "description": "他扮演一位慈祥的神父与病床上的患者聊天。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.4458
     },
     {
       "image": "/images/uploads/museum-083.jpg",
@@ -32,7 +35,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.7486
     },
     {
       "image": "/images/uploads/museum-085.jpg",
@@ -41,7 +45,8 @@
       "medium": "",
       "size": "",
       "description": "在游历美术馆时发生了一场大火，气流从门口倒灌进去，仿佛处在爆炸的前一瞬间。景物开始变形",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 2.2843
     },
     {
       "image": "/images/uploads/museum-086.jpg",
@@ -50,7 +55,8 @@
       "medium": "",
       "size": "",
       "description": "无法互通的信息，无法交汇的目光。",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 2.449
     },
     {
       "image": "/images/uploads/museum-087.jpg",
@@ -59,7 +65,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.6567
     },
     {
       "image": "/images/uploads/museum-090.jpg",
@@ -68,7 +75,8 @@
       "medium": "",
       "size": "",
       "description": "看看谁来了——！！",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.1181
     },
     {
       "image": "/images/uploads/museum-091.jpg",
@@ -77,7 +85,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 0.7417
     },
     {
       "image": "/images/uploads/museum-092.jpg",
@@ -86,7 +95,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 2.0391
     },
     {
       "image": "/images/uploads/museum-093.jpg",
@@ -95,7 +105,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.0
     },
     {
       "image": "/images/uploads/museum-094.jpg",
@@ -104,7 +115,8 @@
       "medium": "",
       "size": "",
       "description": "K200与K000是博士校友，K200的凝聚态理论物理研究与K000的特派计算机技术支援，二人在当时是挚友。学校组建雪山科考队多次考察神山。这次都是二人第一次参加，因K200不老实的性格，探索意外状况频出，在这次科考结束后，K200脑袋里的异常加剧了。因果会开始颠倒，有一天他睁眼，四周能称为物体的边缘全都有白色的幻光出现，他走近每一件物体去看，都映射着死亡。\n\n再后来的两个人都参与的一次勘测，K000仍在工程组K200被分配至采集组。夜晚的银河美不胜收，他们在基地里谈天说地，但K200其实从没说过他在勘测中没睡过一次觉的事（幻觉和焦虑太严重了），不过唯独K000在的这一次，他得到了充分的休息。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.3333
     },
     {
       "image": "/images/uploads/museum-095.jpg",
@@ -113,7 +125,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.9786
     },
     {
       "image": "/images/uploads/museum-096.jpg",
@@ -122,7 +135,8 @@
       "medium": "",
       "size": "",
       "description": "M9的表情调试，唯一不足的地方是口轮匝肌与眼轮匝肌的不稳定控制，导致左眼与左嘴角时常有随机抽动的情况发生。在癫痫病发时体现得尤为明显。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.75
     },
     {
       "image": "/images/uploads/museum-097.jpg",
@@ -131,7 +145,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.6817
     },
     {
       "image": "/images/uploads/museum-098.jpg",
@@ -140,7 +155,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.0213
     },
     {
       "image": "/images/uploads/museum-099.jpg",
@@ -149,7 +165,8 @@
       "medium": "",
       "size": "",
       "description": "那天日落的时长。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.7532
     },
     {
       "image": "/images/uploads/museum-100.jpg",
@@ -158,7 +175,8 @@
       "medium": "",
       "size": "",
       "description": "一些在清晨与院长做伴的无机生物们",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 2.2391
     },
     {
       "image": "/images/uploads/museum-101.jpg",
@@ -167,7 +185,8 @@
       "medium": "",
       "size": "",
       "description": "K200心中的白色天使形象，周围的鱿鱼？符号具有生殖意味。以最诚挚的心去求真，并将欲望与神圣画上等号。想要与天使同床共枕，想要挽起天使的手，想要与天使合为一体。\n\n天使未至：在没有天使的时间（天使未曾降临的时间），K200有着极度的性压抑，例如：不更换全身衣物；不改变服装穿搭；长期进食同样的食物；语无伦次；行为举止跳跃怪异博人眼球；持续思维运算过久（三天到一周（力竭））；闭门不出；截断社交；思维停滞与麻痹木僵。\n\n天使已至：“它”天使会降临于K200的“眼球之上”，与K200眼前的人（少概率为事物）重合，犹如从天上走了下来，走进躯壳里。随即眼前的人在K200中会进行一丝形象上的改变，拥有“白色”的特征。K200便会不顾一切地爱上眼前的人（或物），并活力四射大放光彩。是另一种层面的不可控行为。在天使的降临行为下，K200的移情别恋现象也相当频繁，在社会上得到的评价十分复杂。因此差点失去生命的情况也有发生。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.6294
     },
     {
       "image": "/images/uploads/museum-102.jpg",
@@ -176,7 +195,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 1.5721
     },
     {
       "image": "/images/uploads/museum-103.jpg",
@@ -185,7 +205,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.3921
     },
     {
       "image": "/images/uploads/museum-104.jpg",
@@ -194,7 +215,8 @@
       "medium": "油画",
       "size": "F60",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.3585
     },
     {
       "image": "/images/uploads/museum-105.jpg",
@@ -203,7 +225,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.3333
     },
     {
       "image": "/images/uploads/museum-106.jpg",
@@ -212,7 +235,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 1.3333
     },
     {
       "image": "/images/uploads/museum-107.jpg",
@@ -221,7 +245,8 @@
       "medium": "",
       "size": "",
       "description": "在玩一种交替速读法，分开读书的上卷和下卷，每一个小时进行故事概括的交流，主要是为了娱乐。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.4008
     },
     {
       "image": "/images/uploads/museum-108.jpg",
@@ -230,7 +255,8 @@
       "medium": "",
       "size": "",
       "description": "空间中被映射的不同影像，有时会有重影和偏移，做出与往日不同的行为，呈现与往日不同的心理。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.871
     },
     {
       "image": "/images/uploads/museum-109.jpg",
@@ -239,7 +265,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 0.7022
     },
     {
       "image": "/images/uploads/museum-110.jpg",
@@ -248,7 +275,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.3333
     },
     {
       "image": "/images/uploads/museum-111.jpg",
@@ -257,7 +285,8 @@
       "medium": "",
       "size": "",
       "description": "食羊脑的少女，看见风的形象。",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 1.4622
     },
     {
       "image": "/images/uploads/museum-112.jpg",
@@ -266,7 +295,8 @@
       "medium": "",
       "size": "",
       "description": "记录了两人大学生涯中一场赶赴会议场地的迷路经历",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.8943
     },
     {
       "image": "/images/uploads/museum-113.jpg",
@@ -275,7 +305,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.6389
     },
     {
       "image": "/images/uploads/museum-114.jpg",
@@ -284,7 +315,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 2.8169
     },
     {
       "image": "/images/uploads/museum-115.jpg",
@@ -293,7 +325,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.8606
     },
     {
       "image": "/images/uploads/museum-116.jpg",
@@ -302,7 +335,8 @@
       "medium": "油画",
       "size": "F8",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.7639
     },
     {
       "image": "/images/uploads/museum-117.jpg",
@@ -311,7 +345,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.8161
     },
     {
       "image": "/images/uploads/museum-118.jpg",
@@ -320,7 +355,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.4435
     },
     {
       "image": "/images/uploads/museum-119.jpg",
@@ -329,7 +365,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 0.7361
     },
     {
       "image": "/images/uploads/museum-120.jpg",
@@ -338,7 +375,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.5345
     },
     {
       "image": "/images/uploads/museum-173.jpg",
@@ -347,7 +385,8 @@
       "medium": "油画",
       "size": "172 × 182 cm",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.9445
     },
     {
       "image": "/images/uploads/museum-121.jpg",
@@ -356,7 +395,8 @@
       "medium": "油画",
       "size": "",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.7371
     },
     {
       "image": "/images/uploads/museum-122.jpg",
@@ -365,7 +405,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.8603
     },
     {
       "image": "/images/uploads/museum-123.jpg",
@@ -374,7 +415,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.1924
     },
     {
       "image": "/images/uploads/museum-124.jpg",
@@ -383,7 +425,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.9856
     },
     {
       "image": "/images/uploads/museum-126.jpg",
@@ -392,7 +435,8 @@
       "medium": "白板、记号笔",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 2.0225
     },
     {
       "image": "/images/uploads/museum-127.jpg",
@@ -401,7 +445,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 1.4587
     },
     {
       "image": "/images/uploads/museum-128.jpg",
@@ -410,7 +455,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.75
     },
     {
       "image": "/images/uploads/museum-129.jpg",
@@ -419,7 +465,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.6694
     },
     {
       "image": "/images/uploads/museum-130.jpg",
@@ -428,7 +475,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.2245
     },
     {
       "image": "/images/uploads/museum-131.jpg",
@@ -437,7 +485,8 @@
       "medium": "油画",
       "size": "F6",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.7691
     },
     {
       "image": "/images/uploads/museum-132.jpg",
@@ -446,7 +495,8 @@
       "medium": "木板油画",
       "size": "F6",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.1756
     },
     {
       "image": "/images/uploads/museum-133.jpg",
@@ -455,7 +505,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.7467
     },
     {
       "image": "/images/uploads/museum-135.jpg",
@@ -464,7 +515,8 @@
       "medium": "油画",
       "size": "F60",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.2526
     },
     {
       "image": "/images/uploads/museum-136.jpg",
@@ -473,7 +525,8 @@
       "medium": "木板油画",
       "size": "F12左右",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.2237
     },
     {
       "image": "/images/uploads/museum-137.jpg",
@@ -482,7 +535,8 @@
       "medium": "油画",
       "size": "F60",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.2414
     },
     {
       "image": "/images/uploads/museum-138.jpg",
@@ -491,7 +545,8 @@
       "medium": "",
       "size": "",
       "description": "采用文字和图像同时出现的办法，在目视到区域的同时看到此区域的来自作者的解读。第二章中与图片对应的部分选择多方向颠倒文字以及逆向书写来放慢阅读速度。",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.2405
     },
     {
       "image": "/images/uploads/museum-139.jpg",
@@ -500,7 +555,8 @@
       "medium": "综合材料",
       "size": "F8",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.83
     },
     {
       "image": "/images/uploads/museum-140.jpg",
@@ -509,7 +565,8 @@
       "medium": "油画",
       "size": "P60",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 0.625
     },
     {
       "image": "/images/uploads/museum-141.jpg",
@@ -518,7 +575,8 @@
       "medium": "油画",
       "size": "F60",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.3393
     },
     {
       "image": "/images/uploads/museum-142.jpg",
@@ -527,7 +585,8 @@
       "medium": "",
       "size": "",
       "description": "某人的日记，只是无关工作的日记",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.3072
     },
     {
       "image": "/images/uploads/museum-145.jpg",
@@ -536,7 +595,8 @@
       "medium": "油画",
       "size": "F80",
       "description": "",
-      "category": "Oil"
+      "category": "Oil",
+      "ratio": 1.3168
     },
     {
       "image": "/images/uploads/museum-146.jpg",
@@ -545,7 +605,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.3139
     },
     {
       "image": "/images/uploads/museum-147.jpg",
@@ -554,7 +615,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.2848
     },
     {
       "image": "/images/uploads/museum-148.jpg",
@@ -563,7 +625,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.1696
     },
     {
       "image": "/images/uploads/museum-149.jpg",
@@ -572,7 +635,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.0
     },
     {
       "image": "/images/uploads/museum-150.jpg",
@@ -581,7 +645,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.2154
     },
     {
       "image": "/images/uploads/museum-151.jpg",
@@ -590,7 +655,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.78
     },
     {
       "image": "/images/uploads/museum-152.jpg",
@@ -599,7 +665,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7189
     },
     {
       "image": "/images/uploads/museum-153.jpg",
@@ -608,7 +675,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.6878
     },
     {
       "image": "/images/uploads/museum-154.jpg",
@@ -617,7 +685,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.6828
     },
     {
       "image": "/images/uploads/museum-155.jpg",
@@ -626,7 +695,8 @@
       "medium": "纸本",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.4888
     },
     {
       "image": "/images/uploads/museum-156.jpg",
@@ -635,7 +705,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.2072
     },
     {
       "image": "/images/uploads/museum-157.jpg",
@@ -644,7 +715,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.6267
     },
     {
       "image": "/images/uploads/museum-158.jpg",
@@ -653,7 +725,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.7206
     },
     {
       "image": "/images/uploads/museum-159.jpg",
@@ -662,7 +735,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.6942
     },
     {
       "image": "/images/uploads/museum-160.jpg",
@@ -671,7 +745,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.3343
     },
     {
       "image": "/images/uploads/museum-161.jpg",
@@ -680,7 +755,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.3793
     },
     {
       "image": "/images/uploads/museum-162.jpg",
@@ -689,7 +765,8 @@
       "medium": "",
       "size": "",
       "description": "车站的电梯是那么的唯物，连带着不知是六月的哪一天也那么唯物。所以我同我的情绪和秘密做了交换。一出检票口 迎面而来些许夏日气息，各式各样的人露出最大公约数的笑容，那份重量 无法同个人的空洞相平衡，所以我同我的情绪和秘密做了交换。好空虚 好寂寞 一旦说出口就会结束。好空虚 好寂寞 一旦说出口就会结束。好空虚 好寂寞 一旦说出口就会结束。好空虚 好寂寞。\n人行道的石板 在日照下显得那么炎热，要不今年的六月，就舍弃在这里吧。看着冰淇淋店的招牌时，我这样想。",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.2448
     },
     {
       "image": "/images/uploads/museum-163.jpg",
@@ -698,7 +775,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.9694
     },
     {
       "image": "/images/uploads/museum-164.jpg",
@@ -707,7 +785,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7733
     },
     {
       "image": "/images/uploads/museum-165.jpg",
@@ -716,7 +795,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7567
     },
     {
       "image": "/images/uploads/museum-166.jpg",
@@ -725,7 +805,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7994
     },
     {
       "image": "/images/uploads/museum-167.jpg",
@@ -734,7 +815,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7556
     },
     {
       "image": "/images/uploads/museum-168.jpg",
@@ -743,7 +825,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.7748
     },
     {
       "image": "/images/uploads/museum-169.jpg",
@@ -752,7 +835,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 1.3139
     },
     {
       "image": "/images/uploads/museum-170.jpg",
@@ -761,7 +845,8 @@
       "medium": "铅笔、色粉、木炭",
       "size": "木炭纸判",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.283
     },
     {
       "image": "/images/uploads/museum-144.jpg",
@@ -770,7 +855,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.2989
     },
     {
       "image": "/images/uploads/museum-134.jpg",
@@ -779,7 +865,8 @@
       "medium": "油画",
       "size": "F6",
       "description": "",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 1.2633
     },
     {
       "image": "/images/uploads/museum-143.jpg",
@@ -788,7 +875,8 @@
       "medium": "",
       "size": "",
       "description": "镜中的自己竟是如此难以凝聚成确切的形象。我说这可不是我眼神不好，这镜子真的是这样的，被谁调焦距了啊？",
-      "category": "Sketch"
+      "category": "Sketch",
+      "ratio": 0.6656
     },
     {
       "image": "/images/uploads/museum-171.jpg",
@@ -797,34 +885,8 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Draft"
-    },
-    {
-      "image": "/images/uploads/museum-084.jpg",
-      "title": "概念",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Draft"
-    },
-    {
-      "image": "/images/uploads/museum-088.jpg",
-      "title": "概念（1）",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Draft"
-    },
-    {
-      "image": "/images/uploads/museum-089.jpg",
-      "title": "概念（2）",
-      "year": "2019",
-      "medium": "",
-      "size": "",
-      "description": "",
-      "category": "Draft"
+      "category": "Draft",
+      "ratio": 1.5625
     },
     {
       "image": "/images/uploads/museum-172.jpg",
@@ -833,7 +895,38 @@
       "medium": "",
       "size": "",
       "description": "",
-      "category": "Illustration"
+      "category": "Illustration",
+      "ratio": 0.713
+    },
+    {
+      "image": "/images/uploads/museum-084.jpg",
+      "title": "概念",
+      "year": "2019",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Concept",
+      "ratio": 0.6667
+    },
+    {
+      "image": "/images/uploads/museum-088.jpg",
+      "title": "概念（1）",
+      "year": "2019",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Concept",
+      "ratio": 0.6667
+    },
+    {
+      "image": "/images/uploads/museum-089.jpg",
+      "title": "概念（2）",
+      "year": "2019",
+      "medium": "",
+      "size": "",
+      "description": "",
+      "category": "Concept",
+      "ratio": 0.7448
     }
   ]
 }

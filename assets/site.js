@@ -47,7 +47,7 @@ function fields(pairs) {
   return dl.children.length ? dl : null;
 }
 
-const CATEGORIES = ['Oil', 'Illustration', 'Sketch', 'Draft'];
+const CATEGORIES = ['Oil', 'Illustration', 'Sketch', 'Draft', 'Concept'];
 
 // One work: image (small; a click enlarges it, a second click makes it small again),
 // then title, details and note underneath.
@@ -61,6 +61,9 @@ function workCard(w) {
     btn.setAttribute('aria-label', `Enlarge ${w.title || 'image'}`);
     const img = el('img');
     img.src = asset(w.image); img.alt = w.title || ''; img.loading = 'lazy';
+    // Known proportions reserve the image's space before it loads, so jumping
+    // through the gallery does not drift while pictures above it come in.
+    if (w.ratio > 0) { img.classList.add('has-ratio'); img.style.setProperty('--r', w.ratio); }
     btn.append(img); fig.append(btn);
     btn.addEventListener('click', () => {
       const open = !fig.classList.contains('is-open');
