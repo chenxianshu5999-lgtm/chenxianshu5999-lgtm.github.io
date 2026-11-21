@@ -508,7 +508,8 @@ const render = {
   // Hidden room: one picture across the whole width, with lines of text laid
   // over it as coloured bars (positions are percentages of the picture).
   t0(data) {
-    const d = data.t0, fig = el('div', 'pane');
+    const d = data.t0, wrap = el('div', 'pane-wrap'), fig = el('div', 'pane');
+    wrap.append(fig);
     const img = el('img'); img.src = asset(d.image || '/images/hidden/t0-4.jpg'); img.alt = '';
     fig.append(img);
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -540,6 +541,14 @@ const render = {
         e.stopPropagation();
         dot.remove();
         bar.hidden = false;
+        // On a phone the bar may start off screen; slide the picture to it.
+        const wrap = fig.parentElement;
+        if (wrap && wrap.scrollWidth > wrap.clientWidth) {
+          const left = fig.offsetWidth * (l.x || 0) / 100;
+          const width = Math.min(fig.offsetWidth * (l.w || 36) / 100, wrap.clientWidth - 32);
+          if (left < wrap.scrollLeft + 16 || left + width > wrap.scrollLeft + wrap.clientWidth - 16)
+            wrap.scrollTo({ left: left - 16, behavior: still ? 'auto' : 'smooth' });
+        }
         if (still) { bar.textContent = l.text; return; }
         const chars = Array.from(l.text);
         let n = 0;
@@ -551,7 +560,12 @@ const render = {
       });
       fig.append(bar, dot);
     }
-    return fig;
+    // On a phone the picture fills the height and pans sideways; start with
+    // the figure in the middle of the screen.
+    requestAnimationFrame(() => {
+      if (wrap.scrollWidth > wrap.clientWidth) wrap.scrollLeft = fig.offsetWidth * (d.focus || 0.33) - wrap.clientWidth / 2;
+    });
+    return wrap;
   },
 
   // Hidden room: not in the directory. Reached by tapping the site name three times.
