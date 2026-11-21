@@ -217,7 +217,14 @@ function readerView(data, id) {
       lock.append(p);
       return;
     }
-    lock.append(el('p', 'reader-note', `Pages ${version.free + 1} to ${n} are locked. Enter the key that came with the book.`));
+    const note = el('p', 'reader-note', `Pages ${version.free + 1} to ${n} are locked. ` +
+      (book.link ? 'Enter the key that comes with the book. ' : 'Enter the key.'));
+    if (book.link) {
+      const buy = el('a', '', book.link_label || 'Get this book');
+      buy.href = book.link; buy.target = '_blank'; buy.rel = 'noopener';
+      note.append(buy);
+    }
+    lock.append(note);
     const row = el('div', 'reader-row');
     const input = el('input');
     input.type = 'text'; input.autocomplete = 'off'; input.spellcheck = false;
