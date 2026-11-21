@@ -58,6 +58,7 @@ collections:
               - { name: description, label: 简介, widget: markdown, required: false }
               - { name: link, label: 购买/阅读链接, widget: string, required: false }
               - { name: link_label, label: "按钮文字（默认 Get this book）", widget: string, required: false }
+              - { name: reader, label: "在线阅读编号（对应 books/ 下的文件夹，一般不用改）", widget: string, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
       - name: shop

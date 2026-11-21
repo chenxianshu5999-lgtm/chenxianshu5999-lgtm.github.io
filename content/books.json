@@ -1,4 +1,25 @@
 {
   "intro": "",
-  "items": []
+  "items": [
+    {
+      "cover": "/books/alchemy/zh/p01.jpg",
+      "title": "石头与炼金术与逻辑符号",
+      "year": "",
+      "format": "Digital, 中文 / 日本語",
+      "description": "椅子语：流形性非表意符号语言系统",
+      "link": "",
+      "link_label": "",
+      "reader": "alchemy"
+    },
+    {
+      "cover": "/books/k000/zh/p01.jpg",
+      "title": "K000 世界及其延边",
+      "year": "",
+      "format": "Digital",
+      "description": "",
+      "link": "",
+      "link_label": "",
+      "reader": "k000"
+    }
+  ]
 }

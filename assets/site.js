@@ -97,6 +97,162 @@ function spyRail() {
   });
 }
 
+// ---------- reading a book ----------
+// The first pages of a book are plain images. The rest are stored encrypted
+// (AES-GCM); the key is derived in the browser from the passphrase that comes
+// with the book, so nothing readable sits on the server.
+const b64 = (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
+const keyText = (str) => str.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+async function openWith(meta, key, bytes) {
+  return crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes.slice(0, 12) }, key, bytes.slice(12));
+}
+async function keyFromPhrase(meta, phrase) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(keyText(phrase)), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(meta.salt), iterations: meta.iter }, base, 256);
+  return new Uint8Array(bits);
+}
+async function keyIfRight(meta, raw) {
+  try {
+    const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+    await openWith(meta, key, b64(meta.check));
+    return key;
+  } catch { return null; }
+}
+
+let readerUrls = [];
+function readerView(data, id) {
+  for (const u of readerUrls) URL.revokeObjectURL(u);
+  readerUrls = [];
+  const meta = data.readers[id];
+  const book = shown(data.books.items).find((b) => b.reader === id) || {};
+  const frag = document.createDocumentFragment();
+  const back = el('p', 'reader-back');
+  const backLink = el('a', '', 'Books');
+  backLink.href = '#books';
+  back.append(backLink);
+  frag.append(back, head(book.title || 'Untitled', [book.year, book.format].filter(Boolean).join(', ')));
+
+  const wrap = el('div', 'reader');
+  let version = meta.versions.find((v) => v.lang === store.get(`substanz-lang-${id}`)) || meta.versions[0];
+  let key = null;
+  let run = 0;
+
+  const langs = el('div', 'reader-langs');
+  const pagesBox = el('div', 'reader-pages');
+  const lock = el('form', 'reader-lock');
+  wrap.append(langs, pagesBox, lock);
+
+  function paintLangs() {
+    langs.replaceChildren();
+    if (meta.versions.length < 2) return;
+    for (const v of meta.versions) {
+      const b = el('button', 'reader-lang', v.label);
+      b.type = 'button';
+      if (v === version) b.setAttribute('aria-pressed', 'true');
+      b.addEventListener('click', () => { version = v; store.set(`substanz-lang-${id}`, v.lang); paint(); });
+      langs.append(b);
+    }
+  }
+
+  function pageBox(i) {
+    const [w, h] = version.pages[i - 1];
+    const box = el('div', 'page');
+    box.style.aspectRatio = `${w} / ${h}`;
+    box.addEventListener('click', () => box.classList.toggle('is-zoom'));
+    return box;
+  }
+
+  async function paint() {
+    const mine = ++run;
+    paintLangs();
+    pagesBox.replaceChildren();
+    const base = `books/${id}/${version.lang}/`;
+    const n = version.pages.length;
+    const upto = key ? n : Math.min(n, version.free);
+    const boxes = [];
+    for (let i = 1; i <= upto; i++) {
+      const box = pageBox(i);
+      if (i <= version.free) {
+        const img = el('img');
+        img.src = `${base}p${String(i).padStart(2, '0')}.jpg`;
+        img.alt = `Page ${i}`; img.loading = 'lazy';
+        box.append(img);
+      }
+      boxes.push(box);
+      pagesBox.append(box);
+    }
+    paintLock(n);
+    // locked pages: fetch, decrypt, show, one after another
+    for (let i = version.free + 1; i <= upto; i++) {
+      try {
+        const res = await fetch(`${base}p${String(i).padStart(2, '0')}.bin`);
+        const plain = await openWith(meta, key, new Uint8Array(await res.arrayBuffer()));
+        if (mine !== run) return;
+        const url = URL.createObjectURL(new Blob([plain], { type: 'image/jpeg' }));
+        readerUrls.push(url);
+        const img = el('img');
+        img.src = url; img.alt = `Page ${i}`;
+        boxes[i - 1].append(img);
+      } catch {
+        if (mine !== run) return;
+        boxes[i - 1].append(el('p', 'page-fail', `Page ${i} could not be opened.`));
+      }
+    }
+  }
+
+  function paintLock(n) {
+    lock.replaceChildren();
+    if (n <= version.free) return;
+    if (key) {
+      const p = el('p', 'reader-note', 'Unlocked on this device. ');
+      const out = el('button', 'reader-forget', 'Lock again');
+      out.type = 'button';
+      out.addEventListener('click', () => { key = null; store.del(`substanz-key-${id}`); paint(); });
+      p.append(out);
+      lock.append(p);
+      return;
+    }
+    lock.append(el('p', 'reader-note', `Pages ${version.free + 1} to ${n} are locked. Enter the key that came with the book.`));
+    const row = el('div', 'reader-row');
+    const input = el('input');
+    input.type = 'text'; input.autocomplete = 'off'; input.spellcheck = false;
+    input.setAttribute('aria-label', 'Key');
+    const go = el('button', 'button', 'Unlock');
+    go.type = 'submit';
+    row.append(input, go);
+    const msg = el('p', 'reader-msg');
+    msg.setAttribute('role', 'status');
+    lock.append(row, msg);
+    lock.onsubmit = async (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) return;
+      if (!(window.crypto && crypto.subtle)) { msg.textContent = 'This browser cannot open locked pages.'; return; }
+      go.disabled = true; msg.textContent = 'Checking the key.';
+      const raw = await keyFromPhrase(meta, input.value);
+      const k = await keyIfRight(meta, raw);
+      go.disabled = false;
+      if (!k) { msg.textContent = 'That key does not open this book.'; return; }
+      key = k;
+      store.set(`substanz-key-${id}`, btoa(String.fromCharCode(...raw)));
+      paint();
+    };
+  }
+
+  // a key used before on this device
+  const saved = store.get(`substanz-key-${id}`);
+  if (saved && window.crypto && crypto.subtle) {
+    keyIfRight(meta, b64(saved)).then((k) => { if (k) { key = k; paint(); } else store.del(`substanz-key-${id}`); });
+  }
+  paint();
+  frag.append(wrap);
+  return frag;
+}
+
 const render = {
   overview(data) {
     const frag = document.createDocumentFragment();
@@ -213,12 +369,20 @@ const render = {
       const meta = [b.year, b.format].filter(Boolean).join(', ');
       if (meta) side.append(el('p', 'book-meta', meta));
       if (b.description) { const t = md(b.description); t.classList.add('book-text'); side.append(t); }
-      if (b.link) {
-        const p = el('p', 'book-link');
-        const a = el('a', 'button', b.link_label || 'Get this book');
-        a.href = b.link; a.target = '_blank'; a.rel = 'noopener';
-        p.append(a); side.append(p);
+      const actions = el('p', 'book-link');
+      if (b.reader && data.readers[b.reader]) {
+        const a = el('a', 'button', 'Read');
+        a.href = `#read/${b.reader}`;
+        actions.append(a);
+        cover.classList.add('is-link');
+        cover.addEventListener('click', () => { location.hash = `read/${b.reader}`; });
       }
+      if (b.link) {
+        const a = el('a', 'button button-quiet', b.link_label || 'Get this book');
+        a.href = b.link; a.target = '_blank'; a.rel = 'noopener';
+        actions.append(a);
+      }
+      if (actions.children.length) side.append(actions);
       art.append(cover, side);
       frag.append(art);
     }
@@ -379,7 +543,7 @@ function startPlayer(music) {
 }
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music', 'registry'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'demo', 'music', 'registry', 'readers'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;
@@ -416,8 +580,9 @@ function startPlayer(music) {
   let first = true;
   function show() {
     const id = decodeURIComponent(location.hash.slice(1)) || 'overview';
-    const current = render[id] ? id : 'overview';
-    view.replaceChildren(render[current](data));
+    const reading = id.startsWith('read/') && data.readers[id.slice(5)] ? id.slice(5) : null;
+    const current = reading ? 'books' : (render[id] ? id : 'overview');
+    view.replaceChildren(reading ? readerView(data, reading) : render[current](data));
     for (const a of nav.children) {
       if (a.dataset.view === current) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
