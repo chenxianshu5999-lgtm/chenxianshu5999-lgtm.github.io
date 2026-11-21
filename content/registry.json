@@ -158,31 +158,31 @@
     },
     {
       "no": "",
-      "name": "南山",
+      "name": "许莱样本林（Hyle）",
       "kind": "Site",
       "status": "Registered",
-      "note": "热带雨林气候样本区。"
+      "note": "热带雨林气候样本区。院内通称南山。"
     },
     {
       "no": "",
-      "name": "瞭望塔站点",
+      "name": "观照塔（Theoria）",
       "kind": "Site",
       "status": "Registered",
       "note": "莫比斯在世界各处建立的站点，多是围绕世界景色的瞭望塔。"
     },
     {
       "no": "",
-      "name": "自然学校",
+      "name": "逍遥学校（Peripatos）",
       "kind": "School",
       "status": "Registered",
-      "note": ""
+      "note": "院内通称自然学校。"
     },
     {
       "no": "",
-      "name": "大脑子工坊",
+      "name": "努斯工坊（Nous）",
       "kind": "Workshop",
       "status": "Registered",
-      "note": ""
+      "note": "院内通称大脑子工坊。"
     },
     {
       "no": "",
@@ -200,14 +200,14 @@
     },
     {
       "no": "",
-      "name": "梵音咖啡厅",
+      "name": "梵音咖啡厅（Brahmasvara）",
       "kind": "Café",
       "status": "Registered",
       "note": "东南亚连锁咖啡厅，很受年轻人欢迎。"
     },
     {
       "no": "",
-      "name": "白理生物科技有限公司",
+      "name": "白理生物科技（Albedo）",
       "kind": "Company",
       "status": "Registered",
       "note": "白理制药。可穿戴智能设备及其自助医疗系统。成员很大一部分是曾经莫比斯的科研工作者。"
@@ -221,10 +221,10 @@
     },
     {
       "no": "",
-      "name": "姜潮生",
+      "name": "姜潮生设计事务所（Gezeiten）",
       "kind": "Company",
       "status": "Registered",
-      "note": "设计公司。手握很多设计专利但快破产了。"
+      "note": "手握很多设计专利但快破产了。"
     }
   ]
 }
