@@ -124,6 +124,7 @@ collections:
               - { name: status, label: "状态（Registered 已登记未开工 / Under construction 制作中 / Open 已做完 / Closed 不做了）", widget: select, options: [Registered, Under construction, Open, Closed], default: Registered }
               - { name: kind, label: "类别（可不填，如 committee、club）", widget: string, required: false }
               - { name: note, label: 备注, widget: text, required: false }
+              - { name: link, label: "链接（填了以后名称可以点击跳转）", widget: string, required: false }
               - { name: no, label: "编号（不填就按顺序自动编 001、002…）", widget: string, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 

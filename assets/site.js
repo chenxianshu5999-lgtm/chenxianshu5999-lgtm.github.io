@@ -292,9 +292,16 @@ const render = {
     const list = el('ol', 'reg');
     entries.forEach((e, i) => {
       const li = el('li', 'reg-row');
+      const name = el('span', 'reg-name');
+      if (e.link) {
+        const a = el('a', '', e.name || 'Unnamed');
+        a.href = e.link;
+        if (/^https?:/.test(e.link)) { a.target = '_blank'; a.rel = 'noopener'; }
+        name.append(a);
+      } else name.textContent = e.name || 'Unnamed';
       li.append(
         el('span', 'reg-no', e.no || String(i + 1).padStart(3, '0')),
-        el('span', 'reg-name', e.name || 'Unnamed'),
+        name,
         el('span', 'reg-status', e.status || 'Registered'),
       );
       const sub = [e.kind, e.note].filter(Boolean).join('. ');
