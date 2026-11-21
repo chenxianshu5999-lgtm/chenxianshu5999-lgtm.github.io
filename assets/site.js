@@ -521,7 +521,8 @@ const render = {
       const bar = el('p', 'pane-line');
       bar.hidden = true;
       bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
-      if (l.w) bar.style.width = `${l.w}%`;
+      // The bar is only as long as the text typed so far, up to this width.
+      if (l.w) bar.style.maxWidth = `${l.w}%`;
       if (l.bg) bar.style.background = l.bg;
       if (l.color) bar.style.color = l.color;
       bar.addEventListener('click', (e) => {
