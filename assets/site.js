@@ -163,7 +163,6 @@ function readerView(data, id) {
     const [w, h] = version.pages[i - 1];
     const box = el('div', 'page');
     box.style.aspectRatio = `${w} / ${h}`;
-    if (h > w) box.style.maxWidth = `calc(92vh * ${(w / h).toFixed(4)})`; // an upright page fits the screen
     box.addEventListener('click', () => box.classList.toggle('is-zoom'));
     return box;
   }
