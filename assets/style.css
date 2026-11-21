@@ -209,7 +209,7 @@ ul { padding: 0; list-style: none; }
 .page { width: 100%; cursor: zoom-in; }
 .page + .page { margin-top: 16px; }
 .page img { width: 100%; height: auto; }
-.page.is-zoom { aspect-ratio: auto !important; overflow-x: auto; cursor: zoom-out; }
+.page.is-zoom { aspect-ratio: auto !important; max-width: none !important; overflow-x: auto; cursor: zoom-out; }
 .page.is-zoom img { width: 240%; max-width: none; }
 .page-fail { padding: 20px 0; }
 .reader-lock { margin-top: 40px; padding-top: 24px; border-top: 2px solid var(--ink); max-width: 560px; }
