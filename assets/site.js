@@ -586,6 +586,7 @@ const render = {
         e.stopPropagation();
         dot.remove();
         bar.play();
+        light(bar);
       });
       fig.append(dot);
     }
