@@ -547,13 +547,13 @@ const render = {
       const play = () => {
         bar.hidden = false;
         slideTo(l);
-        if (still) { bar.textContent = l.text; typed = true; return; }
+        if (still) { bar.textContent = l.text; typed = true; light(bar); return; }
         const chars = Array.from(l.text);
         let n = 0;
         (function step() {
           if (!bar.isConnected) return;
           bar.textContent = chars.slice(0, ++n).join('');
-          if (n < chars.length) setTimeout(step, 18); else typed = true;
+          if (n < chars.length) setTimeout(step, 18); else { typed = true; light(bar); }
         })();
       };
       bar.addEventListener('click', (e) => {
@@ -566,8 +566,9 @@ const render = {
         nl.x = (l.x || 0) + (head.dx || 0);
         nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
         const next = makeBar(nl, rest);
+        lit = null;
+        for (const o of bars) o.classList.remove('is-current');
         next.play();
-        light(next);
       });
       bars.push(bar);
       fig.append(bar);
@@ -586,7 +587,6 @@ const render = {
         e.stopPropagation();
         dot.remove();
         bar.play();
-        light(bar);
       });
       fig.append(dot);
     }
