@@ -575,6 +575,89 @@ const render = {
     return wrap;
   },
 
+  // Hidden room: the downlink screen of the Qiyesi space telescope, reached
+  // from its row in the register. With no footage set it stays a dead screen.
+  telescope(data) {
+    const d = data.telescope, frag = document.createDocumentFragment();
+    frag.append(head(d.title || '氕叶斯太空望远镜', d.intro));
+    const room = el('section', 'scope');
+    room.append(el('p', 'scope-label', d.label || 'Facility 019 / Downlink'));
+
+    const screen = el('div', 'scope-screen');
+    if (d.ratio > 0) screen.style.aspectRatio = d.ratio;
+    for (const c of ['tl', 'tr', 'bl', 'br']) screen.append(el('span', `scope-corner scope-${c}`));
+    const ch = el('span', 'scope-tag scope-ch', 'CH 01');
+    const clock = el('span', 'scope-tag scope-clock', 'T+ 00:00:00');
+    screen.append(ch, clock);
+
+    const bar = el('div', 'scope-bar');
+    const play = el('button', 'scope-btn', 'Play'); play.type = 'button';
+    const track = el('div', 'scope-track'); const fill = el('span', 'scope-fill'); track.append(fill);
+    const time = el('span', 'scope-time', '00:00 / --:--');
+    const full = el('button', 'scope-btn', 'Full'); full.type = 'button';
+    bar.append(play, track, time, full);
+
+    const pad = (n) => String(Math.floor(n)).padStart(2, '0');
+    const mmss = (t) => (isFinite(t) ? `${pad(t / 60)}:${pad(t % 60)}` : '--:--');
+
+    if (d.video) {
+      const v = el('video', 'scope-video');
+      v.preload = 'metadata'; v.playsInline = true;
+      if (d.poster) v.poster = asset(d.poster);
+      v.src = /^https?:/.test(d.video) ? d.video : asset(d.video);
+      screen.prepend(v);
+      const toggle = () => (v.paused ? v.play() : v.pause());
+      play.addEventListener('click', toggle);
+      v.addEventListener('click', toggle);
+      v.addEventListener('play', () => { play.textContent = 'Pause'; screen.classList.add('is-live'); });
+      v.addEventListener('pause', () => { play.textContent = 'Play'; });
+      v.addEventListener('timeupdate', () => {
+        fill.style.width = v.duration ? `${(v.currentTime / v.duration) * 100}%` : '0';
+        time.textContent = `${mmss(v.currentTime)} / ${mmss(v.duration)}`;
+      });
+      v.addEventListener('loadedmetadata', () => { time.textContent = `00:00 / ${mmss(v.duration)}`; });
+      track.addEventListener('click', (e) => {
+        if (!v.duration) return;
+        const r = track.getBoundingClientRect();
+        v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration;
+      });
+    } else {
+      // Nothing received yet: reticle and a waiting line in the middle.
+      const idle = el('div', 'scope-idle');
+      idle.innerHTML = '<svg class="scope-reticle" viewBox="0 0 200 200" aria-hidden="true">'
+        + '<circle cx="100" cy="100" r="62" /><circle cx="100" cy="100" r="3" />'
+        + '<line x1="100" y1="8" x2="100" y2="56" /><line x1="100" y1="144" x2="100" y2="192" />'
+        + '<line x1="8" y1="100" x2="56" y2="100" /><line x1="144" y1="100" x2="192" y2="100" /></svg>';
+      const msg = el('p', 'scope-msg');
+      msg.append(el('span', '', 'NO SIGNAL'), el('span', 'scope-sub', 'Awaiting downlink'));
+      idle.append(msg);
+      screen.append(idle);
+      play.disabled = true; full.disabled = true; track.classList.add('is-off');
+    }
+    full.addEventListener('click', () => {
+      const f = screen.requestFullscreen || screen.webkitRequestFullscreen;
+      if (document.fullscreenElement) document.exitFullscreen(); else if (f) f.call(screen);
+    });
+
+    // Time since the screen was opened, so the dead channel still ticks.
+    const t0 = Date.now();
+    const tick = () => {
+      if (!clock.isConnected) return;
+      const s = (Date.now() - t0) / 1000;
+      clock.textContent = `T+ ${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}`;
+      setTimeout(tick, 1000);
+    };
+    setTimeout(tick, 1000);
+
+    room.append(screen, bar);
+    const fl = fields([['Target', d.target || '—'], ['Band', d.band || '—'], ['Received', d.received || '—']]);
+    if (fl) room.append(fl);
+    const back = el('a', 'scope-back', '← Register'); back.href = '#registry';
+    room.append(back);
+    frag.append(room);
+    return frag;
+  },
+
   // Hidden room: not in the directory. Reached by tapping the site name three times.
   registry(data) {
     const r = data.registry, frag = document.createDocumentFragment();
@@ -610,7 +693,7 @@ const render = {
     return frag;
   },
 };
-const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0' };
+const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
 const HIDDEN_NAV = ['t0'];
 
@@ -679,7 +762,7 @@ function startPlayer(music) {
 }
 
 (async () => {
-  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'screening', 'demo', 'music', 'registry', 'readers', 't0'];
+  const names = ['settings', 'menu', 'home', 'gallery', 'books', 'shop', 'screening', 'demo', 'music', 'registry', 'readers', 't0', 'telescope'];
   const loaded = await Promise.all(names.map(load));
   const data = Object.fromEntries(names.map((n, i) => [n, loaded[i] || {}]));
   const s = data.settings;

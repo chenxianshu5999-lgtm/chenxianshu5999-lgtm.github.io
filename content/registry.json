@@ -136,7 +136,8 @@
       "name": "氕叶斯太空望远镜",
       "kind": "Facility",
       "status": "Registered",
-      "note": "莫比斯科技持股建设的非公开太空望远镜。"
+      "note": "莫比斯科技持股建设的非公开太空望远镜。",
+      "link": "#telescope"
     },
     {
       "no": "",

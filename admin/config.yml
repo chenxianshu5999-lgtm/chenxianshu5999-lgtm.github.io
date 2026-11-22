@@ -150,6 +150,20 @@ collections:
               - { name: file, label: "音频文件（mp3 / m4a / ogg）", widget: file }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
+      - name: telescope
+        label: 隐藏页 氕叶斯太空望远镜（放映界面）
+        file: content/telescope.json
+        fields:
+          - { name: title, label: 页面标题, widget: string, required: false }
+          - { name: label, label: "屏幕上方的小字", widget: string, required: false }
+          - { name: intro, label: 标题下的一句话, widget: string, required: false }
+          - { name: video, label: "视频文件（mp4，100MB 以内；也可填外部链接）", widget: file, required: false }
+          - { name: poster, label: 封面图（播放前显示）, widget: image, required: false }
+          - { name: ratio, label: "画面比例（如 1.778 = 16:9；不填就是 16:9）", widget: number, value_type: float, required: false }
+          - { name: target, label: "Target（观测目标）", widget: string, required: false }
+          - { name: band, label: "Band（波段）", widget: string, required: false }
+          - { name: received, label: "Received（接收时间）", widget: string, required: false }
+
       - name: registry
         label: Register（隐藏页：莫比斯小机构登记列表）
         file: content/registry.json
