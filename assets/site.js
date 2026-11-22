@@ -516,9 +516,18 @@ const render = {
     // Same order of events as the demo: a glowing dot first; a click on it
     // removes the dot and types the bar out. A click on a bar lights its
     // border, a click anywhere else puts it back.
+    // Lines can carry followers in `then`: as in the demo, a click on a bar
+    // that has finished typing brings the next one in just below it.
     const bars = [];
-    for (const l of shown(d.lines)) {
-      if (!l.text) continue;
+    const slideTo = (l) => {
+      const wrap = fig.parentElement;
+      if (!wrap || wrap.scrollWidth <= wrap.clientWidth) return;
+      const left = fig.offsetWidth * (l.x || 0) / 100;
+      const width = Math.min(fig.offsetWidth * (l.w || 36) / 100, wrap.clientWidth - 32);
+      if (left < wrap.scrollLeft + 16 || left + width > wrap.scrollLeft + wrap.clientWidth - 16)
+        wrap.scrollTo({ left: left - 16, behavior: still ? 'auto' : 'smooth' });
+    };
+    const makeBar = (l, chain) => {
       const bar = el('p', 'pane-line');
       bar.hidden = true;
       bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
@@ -526,12 +535,39 @@ const render = {
       if (l.w) bar.style.maxWidth = `${l.w}%`;
       if (l.bg) bar.style.background = l.bg;
       if (l.color) bar.style.color = l.color;
+      let typed = false, opened = false;
+      const play = () => {
+        bar.hidden = false;
+        slideTo(l);
+        if (still) { bar.textContent = l.text; typed = true; return; }
+        const chars = Array.from(l.text);
+        let n = 0;
+        (function step() {
+          if (!bar.isConnected) return;
+          bar.textContent = chars.slice(0, ++n).join('');
+          if (n < chars.length) setTimeout(step, 40); else typed = true;
+        })();
+      };
       bar.addEventListener('click', (e) => {
         e.stopPropagation();
         for (const o of bars) o.classList.toggle('is-current', o === bar);
+        if (!typed || opened || !chain.length) return;
+        opened = true;
+        const [head, ...rest] = chain;
+        const nl = { ...l, ...head, then: undefined };
+        nl.x = (l.x || 0) + (head.dx || 0);
+        nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
+        const next = makeBar(nl, rest);
+        next.play();
       });
       bars.push(bar);
-
+      fig.append(bar);
+      bar.play = play;
+      return bar;
+    };
+    for (const l of shown(d.lines)) {
+      if (!l.text) continue;
+      const bar = makeBar(l, (l.then || []).filter((t) => t && t.text));
       const dot = el('button', 'pane-dot');
       dot.type = 'button';
       dot.setAttribute('aria-label', 'Open');
@@ -540,25 +576,9 @@ const render = {
       dot.addEventListener('click', (e) => {
         e.stopPropagation();
         dot.remove();
-        bar.hidden = false;
-        // On a phone the bar may start off screen; slide the picture to it.
-        const wrap = fig.parentElement;
-        if (wrap && wrap.scrollWidth > wrap.clientWidth) {
-          const left = fig.offsetWidth * (l.x || 0) / 100;
-          const width = Math.min(fig.offsetWidth * (l.w || 36) / 100, wrap.clientWidth - 32);
-          if (left < wrap.scrollLeft + 16 || left + width > wrap.scrollLeft + wrap.clientWidth - 16)
-            wrap.scrollTo({ left: left - 16, behavior: still ? 'auto' : 'smooth' });
-        }
-        if (still) { bar.textContent = l.text; return; }
-        const chars = Array.from(l.text);
-        let n = 0;
-        (function step() {
-          if (!bar.isConnected) return;
-          bar.textContent = chars.slice(0, ++n).join('');
-          if (n < chars.length) setTimeout(step, 40);
-        })();
+        bar.play();
       });
-      fig.append(bar, dot);
+      fig.append(dot);
     }
     // On a phone the picture fills the height and pans sideways; start with
     // the figure in the middle of the screen.
