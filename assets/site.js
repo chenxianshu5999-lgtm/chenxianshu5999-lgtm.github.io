@@ -545,7 +545,7 @@ const render = {
         (function step() {
           if (!bar.isConnected) return;
           bar.textContent = chars.slice(0, ++n).join('');
-          if (n < chars.length) setTimeout(step, 40); else typed = true;
+          if (n < chars.length) setTimeout(step, 18); else typed = true;
         })();
       };
       bar.addEventListener('click', (e) => {
@@ -558,6 +558,7 @@ const render = {
         nl.x = (l.x || 0) + (head.dx || 0);
         nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
         const next = makeBar(nl, rest);
+        for (const o of bars) o.classList.toggle('is-current', o === next);
         next.play();
       });
       bars.push(bar);
