@@ -519,6 +519,14 @@ const render = {
     // Lines can carry followers in `then`: as in the demo, a click on a bar
     // that has finished typing brings the next one in just below it.
     const bars = [];
+    // Move the lit border to one bar; wait a frame so a bar that has only just
+    // been shown fades in instead of appearing already lit.
+    let lit = null;
+    const light = (bar) => {
+      lit = bar;
+      for (const o of bars) if (o !== bar) o.classList.remove('is-current');
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (lit === bar) bar.classList.add('is-current'); }));
+    };
     const slideTo = (l) => {
       const wrap = fig.parentElement;
       if (!wrap || wrap.scrollWidth <= wrap.clientWidth) return;
@@ -550,7 +558,7 @@ const render = {
       };
       bar.addEventListener('click', (e) => {
         e.stopPropagation();
-        for (const o of bars) o.classList.toggle('is-current', o === bar);
+        light(bar);
         if (!typed || opened || !chain.length) return;
         opened = true;
         const [head, ...rest] = chain;
@@ -558,8 +566,8 @@ const render = {
         nl.x = (l.x || 0) + (head.dx || 0);
         nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
         const next = makeBar(nl, rest);
-        for (const o of bars) o.classList.toggle('is-current', o === next);
         next.play();
+        light(next);
       });
       bars.push(bar);
       fig.append(bar);
