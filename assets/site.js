@@ -538,7 +538,10 @@ const render = {
         wrap.scrollTo({ left: left - 16, behavior: still ? 'auto' : 'smooth' });
     };
     // `done` runs once the last bar of a line's chain has finished typing.
-    const makeBar = (l, chain, done) => {
+    // All bars of one line share a `group`; once the line has been read to the
+    // end, a click on any of its bars folds them back into the dot, and the dot
+    // opens them again as they were, without typing them out a second time.
+    const makeBar = (l, chain, done, group) => {
       const bar = el('p', 'pane-line');
       bar.hidden = true;
       bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
@@ -559,9 +562,14 @@ const render = {
           if (n < chars.length) setTimeout(step, 18); else { typed = true; light(bar); finish(); }
         })();
       };
-      const finish = () => { if (!chain.length && done) { const f = done; done = null; f(bar); } };
+      const finish = () => {
+        if (chain.length) return;
+        group.read = true;
+        if (done) { const f = done; done = null; f(bar); }
+      };
       bar.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (group.read && !quick) { group.fold(); return; }
         light(bar);
         if (!typed || opened || !chain.length) return;
         opened = true;
@@ -569,12 +577,13 @@ const render = {
         const nl = { ...l, ...head, then: undefined };
         nl.x = (l.x || 0) + (head.dx || 0);
         nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
-        const next = makeBar(nl, rest, done);
+        const next = makeBar(nl, rest, done, group);
         lit = null;
         for (const o of bars) o.classList.remove('is-current');
         next.play();
       });
       bars.push(bar);
+      group.bars.push(bar);
       fig.append(bar);
       bar.play = play;
       return bar;
@@ -616,13 +625,27 @@ const render = {
       // Back from the room behind the door, the door's line asks something else.
       if (entries.length === back && l.againText) l = { ...l, text: l.againText };
       const dot = el('button', 'pane-dot');
+      const group = { bars: [], read: false };
+      group.fold = () => {
+        for (const b of group.bars) { b.hidden = true; b.classList.remove('is-current'); }
+        if (lit && group.bars.includes(lit)) lit = null;
+        dot.hidden = false; dot.classList.remove('is-arriving');
+        fig.append(dot);
+        if (l.door && doors[l.door]) placeDoor(l, null);
+      };
+      group.unfold = () => {
+        for (const b of group.bars) b.hidden = false;
+        const last = group.bars[group.bars.length - 1];
+        light(last);
+        if (l.door && doors[l.door]) placeDoor(l, last);
+      };
       let release;
       const ready = new Promise((r) => { release = r; });
       const bar = makeBar(l, (l.then || []).filter((t) => t && t.text), (lastBar) => {
         release();
         // A line can open a door: a black square beside its last bar, leading on to another room.
         if (l.door) placeDoor(l, lastBar);
-      });
+      }, group);
       dot.type = 'button';
       dot.setAttribute('aria-label', 'Open');
       dot.style.left = bar.style.left; dot.style.top = bar.style.top;
@@ -630,7 +653,7 @@ const render = {
       dot.addEventListener('click', (e) => {
         e.stopPropagation();
         dot.remove();
-        bar.play();
+        if (group.read) group.unfold(); else bar.play();
       });
       const i = entries.length;
       if (l.after && prevDone && !(back >= 0 && i <= back)) {
