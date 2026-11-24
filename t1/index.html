@@ -129,7 +129,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
   var gAtomC=new THREE.SphereGeometry(0.46,20,14), gAtomH=new THREE.SphereGeometry(0.27,16,12);
   var gNuc=new THREE.SphereGeometry(0.1,12,10), gRing=new THREE.TorusGeometry(RR,0.011,6,22);
   var mNuc=new THREE.MeshStandardMaterial({color:C_BONE,roughness:0.5});
-  var mRing=new THREE.MeshBasicMaterial({color:C_LOOSE}), mRingHi=new THREE.MeshBasicMaterial({color:0xb9f3ea}), mRingOpen=new THREE.MeshBasicMaterial({color:0x8b9bb0});
+  var mRing=new THREE.MeshBasicMaterial({color:C_LOOSE}), mRingHi=new THREE.MeshBasicMaterial({color:0xffffff}), mRingOpen=new THREE.MeshBasicMaterial({color:0x8b9bb0});
 
   function buildAtoms(){
     for(var p=0;p<2;p++){
@@ -303,7 +303,9 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
         rg.visible=hung&&rs>0.02;
         rg.scale.setScalar(Math.max(rs,0.001));
         rg.position.y=rg.userData.base.y+dy;
-        if(n.full[t]) rg.material=(hiN&&t===1&&(n===hiN[0]||n===hiN[1]))?mRingHi:mRing;
+        var isHi=hiN&&t===1&&(n===hiN[0]||n===hiN[1]);
+        if(n.full[t]) rg.material=isHi?mRingHi:mRing;
+        if(isHi) rg.scale.setScalar(Math.max(rs,0.001)*1.35);
       }
       n.tubeV=sm((a-0.9)/0.1)*(isEdge?sc:1);
       if(a<0.5) back[n.p]++;
