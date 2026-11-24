@@ -557,7 +557,7 @@ const render = {
           if (n < chars.length) setTimeout(step, 18); else { typed = true; light(bar); finish(); }
         })();
       };
-      const finish = () => { if (!chain.length && done) { const f = done; done = null; f(); } };
+      const finish = () => { if (!chain.length && done) { const f = done; done = null; f(bar); } };
       bar.addEventListener('click', (e) => {
         e.stopPropagation();
         light(bar);
@@ -585,7 +585,19 @@ const render = {
       const dot = el('button', 'pane-dot');
       let release;
       const ready = new Promise((r) => { release = r; });
-      const bar = makeBar(l, (l.then || []).filter((t) => t && t.text), () => release());
+      const bar = makeBar(l, (l.then || []).filter((t) => t && t.text), (lastBar) => {
+        release();
+        // A line can open a door: a black square beside its last bar, leading on to another room.
+        if (l.door) {
+          const door = el('a', 'pane-door');
+          door.href = l.door;
+          door.setAttribute('aria-label', 'Enter');
+          door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
+          door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
+          door.addEventListener('click', (e) => e.stopPropagation());
+          fig.append(door);
+        }
+      });
       dot.type = 'button';
       dot.setAttribute('aria-label', 'Open');
       dot.style.left = bar.style.left; dot.style.top = bar.style.top;
@@ -747,7 +759,7 @@ const render = {
 };
 const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', t1: 'T1', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
-const HIDDEN_NAV = ['t0', 't1'];
+const HIDDEN_NAV = ['t0'];
 
 // Music bar in the top-right corner. Tracks come from content/music.json.
 // Browsers refuse to start sound before the visitor has touched the page, so

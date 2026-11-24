@@ -102,6 +102,7 @@ collections:
               - { name: color, label: "字色（如 #111111）", widget: string, required: false }
               - { name: dot, label: "圆点颜色（留空则同底色）", widget: string, required: false }
               - { name: after, label: 等上一条读完才出现圆点, widget: boolean, default: false, required: false }
+              - { name: door, label: "读完后在旁边出现黑色方块，点进去到（如 #t1；留空则没有）", widget: string, required: false }
               - name: then
                 label: 接续台词（点完上一条后出现在它下方）
                 widget: list
