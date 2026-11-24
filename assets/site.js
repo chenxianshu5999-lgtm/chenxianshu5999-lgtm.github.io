@@ -592,6 +592,10 @@ const render = {
     // this room the square waits where the line's dot sits.
     const doors = {};
     const opened = () => [...OPENED_DOORS];
+    // Doors sit in a row on the pale blue strip painted in the picture, in
+    // the order their lines come; the first door takes the first place.
+    const shelf = { x: 13.1, y: 35.6, step: 3.6, ...(d.doorShelf || {}) };
+    const doorOrder = shown(d.lines).filter((l) => l.door).map((l) => l.door);
     const placeDoor = (l, lastBar) => {
       let door = doors[l.door];
       if (!door) {
@@ -600,17 +604,12 @@ const render = {
         door.setAttribute('aria-label', l.doorLabel || 'Enter');
         if (l.doorLabel) door.dataset.label = l.doorLabel;
         door.addEventListener('click', (e) => e.stopPropagation());
+        const slot = Math.max(0, doorOrder.indexOf(l.door));
+        door.style.left = `${shelf.x + 0.6 + slot * shelf.step}%`;
+        door.style.top = `${shelf.y}%`;
         fig.append(door);
       }
-      door.classList.toggle('at-dot', !lastBar);
-      if (lastBar) {
-        door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
-        door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
-        OPENED_DOORS.add(l.door);
-      } else {
-        door.style.left = `${(l.x || 0) + 1.6}%`;
-        door.style.top = `${l.y || 0}%`;
-      }
+      if (lastBar) OPENED_DOORS.add(l.door);
     };
     // A line marked `after` keeps its dot back until the line before it has
     // been read to the end (its last bar typed out), then the dot fades in.
@@ -637,12 +636,6 @@ const render = {
         node.classList.add('is-faded');
         requestAnimationFrame(() => requestAnimationFrame(() => node.classList.remove('is-faded')));
       };
-      const moveDoor = (to) => {
-        const door = l.door && doors[l.door];
-        if (!door) return;
-        door.classList.add('is-faded');
-        setTimeout(() => { placeDoor(l, to); door.classList.remove('is-faded'); }, FADE);
-      };
       group.fold = () => {
         if (group.busy) return;
         group.busy = true;
@@ -650,7 +643,6 @@ const render = {
         if (lit && group.bars.includes(lit)) lit = null;
         dot.hidden = false; dot.classList.remove('is-arriving');
         fig.append(dot); fadeIn(dot);
-        moveDoor(null);
         setTimeout(() => {
           for (const b of group.bars) { b.hidden = true; b.classList.remove('is-faded'); }
           group.busy = false;
@@ -662,7 +654,6 @@ const render = {
         dot.classList.add('is-faded');
         for (const b of group.bars) { b.hidden = false; fadeIn(b); }
         const last = group.bars[group.bars.length - 1];
-        moveDoor(last);
         setTimeout(() => {
           dot.remove(); dot.classList.remove('is-faded');
           light(last);
@@ -736,7 +727,7 @@ const render = {
   // /t1/index.html; its script is content/t1.json.
   t1() {
     const f = el('iframe', 'lesson-frame');
-    f.src = asset('/t1/') + '?v=2611250107';
+    f.src = asset('/t1/') + '?v=2611250123';
     f.title = 'T1';
     f.setAttribute('allowfullscreen', '');
     // Fill exactly what is left of the screen below whatever sits above the

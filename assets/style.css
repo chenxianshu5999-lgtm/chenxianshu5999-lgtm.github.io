@@ -291,12 +291,12 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
 @keyframes pane-glow { from { box-shadow: 0 0 8px var(--dot); } to { box-shadow: 0 0 32px var(--dot); } }
 .pane-dot[hidden] { display: none; }
 .pane-door {
-  position: absolute; width: clamp(28px, 3cqw, 52px); aspect-ratio: 1; background: #000;
+  position: absolute; width: clamp(22px, 2.8cqw, 52px); aspect-ratio: 1; background: #000;
   border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   animation: pane-arrive 1.2s ease-out, door-breathe 2.4s ease-in-out 1.2s infinite alternate;
 }
 .pane-door:hover { border-color: #fff; }
-.pane-door.at-dot { transform: translateY(-50%); }
+.pane-door { transform: translateY(-50%); }
 .pane-door[data-label]:hover::after {
   content: attr(data-label); position: absolute; left: 0; top: calc(100% + 8px);
   padding: 0.35em 0.7em; background: #000; color: #fff; border: 1px solid #fff;
