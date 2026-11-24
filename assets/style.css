@@ -284,7 +284,10 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
   animation: pane-glow 1.4s ease-in-out infinite alternate;
 }
 @keyframes pane-glow { from { box-shadow: 0 0 8px var(--dot); } to { box-shadow: 0 0 32px var(--dot); } }
-@media (prefers-reduced-motion: reduce) { .pane-dot { animation: none; } }
+.pane-dot[hidden] { display: none; }
+.pane-dot.is-arriving { animation: pane-arrive 1.2s ease-out, pane-glow 1.4s ease-in-out 1.2s infinite alternate; }
+@keyframes pane-arrive { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pane-dot, .pane-dot.is-arriving { animation: none; } }
 .pane img { display: block; width: 100%; height: auto; }
 .is-hidden-room .button { background: #fff; color: #000; border-color: #fff; }
 .is-hidden-room .button:hover { background: #000; color: #fff; }

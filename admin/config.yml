@@ -100,6 +100,17 @@ collections:
               - { name: w, label: "宽度（占图宽的百分比）", widget: number, value_type: float, default: 25 }
               - { name: bg, label: "底色（如 #c9d62a）", widget: string, required: false }
               - { name: color, label: "字色（如 #111111）", widget: string, required: false }
+              - { name: dot, label: "圆点颜色（留空则同底色）", widget: string, required: false }
+              - { name: after, label: 等上一条读完才出现圆点, widget: boolean, default: false, required: false }
+              - name: then
+                label: 接续台词（点完上一条后出现在它下方）
+                widget: list
+                required: false
+                summary: "{{fields.text}}"
+                fields:
+                  - { name: text, label: 台词, widget: text }
+                  - { name: dx, label: "向右错开（百分比）", widget: number, value_type: float, required: false }
+                  - { name: gap, label: "与上一条的间距（百分比）", widget: number, value_type: float, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
       - name: shop

@@ -535,7 +535,8 @@ const render = {
       if (left < wrap.scrollLeft + 16 || left + width > wrap.scrollLeft + wrap.clientWidth - 16)
         wrap.scrollTo({ left: left - 16, behavior: still ? 'auto' : 'smooth' });
     };
-    const makeBar = (l, chain) => {
+    // `done` runs once the last bar of a line's chain has finished typing.
+    const makeBar = (l, chain, done) => {
       const bar = el('p', 'pane-line');
       bar.hidden = true;
       bar.style.left = `${l.x || 0}%`; bar.style.top = `${l.y || 0}%`;
@@ -547,15 +548,16 @@ const render = {
       const play = () => {
         bar.hidden = false;
         slideTo(l);
-        if (still) { bar.textContent = l.text; typed = true; light(bar); return; }
+        if (still) { bar.textContent = l.text; typed = true; light(bar); finish(); return; }
         const chars = Array.from(l.text);
         let n = 0;
         (function step() {
           if (!bar.isConnected) return;
           bar.textContent = chars.slice(0, ++n).join('');
-          if (n < chars.length) setTimeout(step, 18); else { typed = true; light(bar); }
+          if (n < chars.length) setTimeout(step, 18); else { typed = true; light(bar); finish(); }
         })();
       };
+      const finish = () => { if (!chain.length && done) { const f = done; done = null; f(); } };
       bar.addEventListener('click', (e) => {
         e.stopPropagation();
         light(bar);
@@ -565,7 +567,7 @@ const render = {
         const nl = { ...l, ...head, then: undefined };
         nl.x = (l.x || 0) + (head.dx || 0);
         nl.y = (bar.offsetTop + bar.offsetHeight) / fig.offsetHeight * 100 + (head.gap ?? 1.2);
-        const next = makeBar(nl, rest);
+        const next = makeBar(nl, rest, done);
         lit = null;
         for (const o of bars) o.classList.remove('is-current');
         next.play();
@@ -575,10 +577,15 @@ const render = {
       bar.play = play;
       return bar;
     };
+    // A line marked `after` keeps its dot back until the line before it has
+    // been read to the end (its last bar typed out), then the dot fades in.
+    let prevDone = null;
     for (const l of shown(d.lines)) {
       if (!l.text) continue;
-      const bar = makeBar(l, (l.then || []).filter((t) => t && t.text));
       const dot = el('button', 'pane-dot');
+      let release;
+      const ready = new Promise((r) => { release = r; });
+      const bar = makeBar(l, (l.then || []).filter((t) => t && t.text), () => release());
       dot.type = 'button';
       dot.setAttribute('aria-label', 'Open');
       dot.style.left = bar.style.left; dot.style.top = bar.style.top;
@@ -588,7 +595,11 @@ const render = {
         dot.remove();
         bar.play();
       });
-      fig.append(dot);
+      if (l.after && prevDone) {
+        dot.hidden = true;
+        prevDone.then(() => { dot.hidden = false; dot.classList.add('is-arriving'); fig.append(dot); });
+      } else fig.append(dot);
+      prevDone = ready;
     }
     // On a phone the picture fills the height and pans sideways; start with
     // the figure in the middle of the screen.
