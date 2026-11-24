@@ -64,7 +64,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
   <div id="talk" aria-live="polite"></div>
   <div class="tools">
     <button class="tool" id="again" hidden>再放一遍</button>
-    <button class="tool" id="restart" hidden>从头再来</button>
+    <button class="tool" id="restart" hidden>回家</button>
   </div>
 </div>
 
@@ -502,7 +502,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
     await sayLine(missed?(end.missed||'差不多。'):(end.clean||'会了。'),false);
     restartBtn.hidden=false;
   }
-  restartBtn.addEventListener('click',function(){ run(); });
+  restartBtn.addEventListener('click',function(){ try{ (window.top||window).location.hash='t0'; }catch(e){ location.href='../#t0'; } });
   document.addEventListener('keydown',function(e){
     if((e.key===' '||e.key==='Enter')&&waiting&&!(e.target.closest&&e.target.closest('button'))){ e.preventDefault(); waiting(); }
   });

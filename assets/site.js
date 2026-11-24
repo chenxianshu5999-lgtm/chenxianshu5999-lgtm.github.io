@@ -577,6 +577,30 @@ const render = {
       bar.play = play;
       return bar;
     };
+    // Doors stay open once found: the browser remembers them, and on later
+    // visits the square waits where the line's dot sits until the line is read again.
+    const doors = {};
+    const DOOR_KEY = 'substanz-doors';
+    const opened = () => { try { return JSON.parse(localStorage.getItem(DOOR_KEY) || '[]'); } catch { return []; } };
+    const placeDoor = (l, lastBar) => {
+      let door = doors[l.door];
+      if (!door) {
+        door = doors[l.door] = el('a', 'pane-door');
+        door.href = l.door;
+        door.setAttribute('aria-label', 'Enter');
+        door.addEventListener('click', (e) => e.stopPropagation());
+        fig.append(door);
+      }
+      if (lastBar) {
+        door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
+        door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
+        const list = opened();
+        if (!list.includes(l.door)) { list.push(l.door); try { localStorage.setItem(DOOR_KEY, JSON.stringify(list)); } catch {} }
+      } else {
+        door.style.left = `${(l.x || 0) + 2}%`;
+        door.style.top = `${(l.y || 0) - 1.5}%`;
+      }
+    };
     // A line marked `after` keeps its dot back until the line before it has
     // been read to the end (its last bar typed out), then the dot fades in.
     let prevDone = null;
@@ -588,15 +612,7 @@ const render = {
       const bar = makeBar(l, (l.then || []).filter((t) => t && t.text), (lastBar) => {
         release();
         // A line can open a door: a black square beside its last bar, leading on to another room.
-        if (l.door) {
-          const door = el('a', 'pane-door');
-          door.href = l.door;
-          door.setAttribute('aria-label', 'Enter');
-          door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
-          door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
-          door.addEventListener('click', (e) => e.stopPropagation());
-          fig.append(door);
-        }
+        if (l.door) placeDoor(l, lastBar);
       });
       dot.type = 'button';
       dot.setAttribute('aria-label', 'Open');
@@ -612,6 +628,7 @@ const render = {
         prevDone.then(() => { dot.hidden = false; dot.classList.add('is-arriving'); fig.append(dot); });
       } else fig.append(dot);
       prevDone = ready;
+      if (l.door && opened().includes(l.door)) placeDoor(l, null);
     }
     // On a phone the picture fills the height and pans sideways; start with
     // the figure in the middle of the screen.
