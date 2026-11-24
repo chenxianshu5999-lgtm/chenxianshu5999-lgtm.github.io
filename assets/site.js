@@ -579,11 +579,10 @@ const render = {
       bar.play = play;
       return bar;
     };
-    // Doors stay open once found: the browser remembers them, and on later
-    // visits the square waits where the line's dot sits until the line is read again.
+    // Doors stay open once found, until the page is reloaded: coming back to
+    // this room the square waits where the line's dot sits.
     const doors = {};
-    const DOOR_KEY = 'substanz-doors';
-    const opened = () => { try { return JSON.parse(localStorage.getItem(DOOR_KEY) || '[]'); } catch { return []; } };
+    const opened = () => [...OPENED_DOORS];
     const placeDoor = (l, lastBar) => {
       let door = doors[l.door];
       if (!door) {
@@ -598,8 +597,7 @@ const render = {
       if (lastBar) {
         door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
         door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
-        const list = opened();
-        if (!list.includes(l.door)) { list.push(l.door); try { localStorage.setItem(DOOR_KEY, JSON.stringify(list)); } catch {} }
+        OPENED_DOORS.add(l.door);
       } else {
         door.style.left = `${(l.x || 0) + 1.6}%`;
         door.style.top = `${l.y || 0}%`;
@@ -614,8 +612,9 @@ const render = {
     const back = lines.findIndex((l) => l.door && opened().includes(l.door));
     const entries = [];
     let prevDone = null;
-    for (const l of lines) {
-      if (!l.text) continue;
+    for (let l of lines) {
+      // Back from the room behind the door, the door's line asks something else.
+      if (entries.length === back && l.againText) l = { ...l, text: l.againText };
       const dot = el('button', 'pane-dot');
       let release;
       const ready = new Promise((r) => { release = r; });
@@ -807,6 +806,8 @@ const render = {
     return frag;
   },
 };
+// Doors found in T0 during this visit (forgotten on reload).
+const OPENED_DOORS = new Set();
 const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', t1: 'T1', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
 const HIDDEN_NAV = ['t0'];
