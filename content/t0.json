@@ -29,7 +29,8 @@
       "color": "#ffffff",
       "after": true,
       "text": "我们从我大学那会儿风靡一时的双柱实验说起吧？",
-      "door": "#t1"
+      "door": "#t1",
+      "doorLabel": "双柱实验"
     }
   ]
 }

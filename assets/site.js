@@ -519,6 +519,8 @@ const render = {
     // Lines can carry followers in `then`: as in the demo, a click on a bar
     // that has finished typing brings the next one in just below it.
     const bars = [];
+    // While a visit is being put back as it was left, bars appear already typed.
+    let quick = false;
     // Move the lit border to one bar; wait a frame so a bar that has only just
     // been shown fades in instead of appearing already lit.
     let lit = null;
@@ -548,7 +550,7 @@ const render = {
       const play = () => {
         bar.hidden = false;
         slideTo(l);
-        if (still) { bar.textContent = l.text; typed = true; light(bar); finish(); return; }
+        if (still || quick) { bar.textContent = l.text; typed = true; light(bar); finish(); return; }
         const chars = Array.from(l.text);
         let n = 0;
         (function step() {
@@ -587,24 +589,32 @@ const render = {
       if (!door) {
         door = doors[l.door] = el('a', 'pane-door');
         door.href = l.door;
-        door.setAttribute('aria-label', 'Enter');
+        door.setAttribute('aria-label', l.doorLabel || 'Enter');
+        if (l.doorLabel) door.dataset.label = l.doorLabel;
         door.addEventListener('click', (e) => e.stopPropagation());
         fig.append(door);
       }
+      door.classList.toggle('at-dot', !lastBar);
       if (lastBar) {
         door.style.left = `${(lastBar.offsetLeft + lastBar.offsetWidth) / fig.offsetWidth * 100 + 1.2}%`;
         door.style.top = `${lastBar.offsetTop / fig.offsetHeight * 100}%`;
         const list = opened();
         if (!list.includes(l.door)) { list.push(l.door); try { localStorage.setItem(DOOR_KEY, JSON.stringify(list)); } catch {} }
       } else {
-        door.style.left = `${(l.x || 0) + 2}%`;
-        door.style.top = `${(l.y || 0) - 1.5}%`;
+        door.style.left = `${(l.x || 0) + 1.6}%`;
+        door.style.top = `${l.y || 0}%`;
       }
     };
     // A line marked `after` keeps its dot back until the line before it has
     // been read to the end (its last bar typed out), then the dot fades in.
+    // Once a door has been found, the room is put back the way it was left:
+    // every line before the door's line already read out, the door's line
+    // still a dot, and the door beside it.
+    const lines = shown(d.lines).filter((l) => l.text);
+    const back = lines.findIndex((l) => l.door && opened().includes(l.door));
+    const entries = [];
     let prevDone = null;
-    for (const l of shown(d.lines)) {
+    for (const l of lines) {
       if (!l.text) continue;
       const dot = el('button', 'pane-dot');
       let release;
@@ -623,12 +633,35 @@ const render = {
         dot.remove();
         bar.play();
       });
-      if (l.after && prevDone) {
+      const i = entries.length;
+      if (l.after && prevDone && !(back >= 0 && i <= back)) {
         dot.hidden = true;
-        prevDone.then(() => { dot.hidden = false; dot.classList.add('is-arriving'); fig.append(dot); });
+        prevDone.then(() => { if (!dot.hidden) return; dot.hidden = false; dot.classList.add('is-arriving'); fig.append(dot); });
       } else fig.append(dot);
       prevDone = ready;
-      if (l.door && opened().includes(l.door)) placeDoor(l, null);
+      if (i === back) placeDoor(l, null);
+      entries.push({ bar, dot });
+    }
+    if (back > 0) {
+      const restore = () => requestAnimationFrame(() => {
+        if (!fig.isConnected) return;
+        quick = true;
+        for (const { bar, dot } of entries.slice(0, back)) {
+          dot.remove();
+          let b = bar;
+          b.play();
+          for (;;) {
+            const n = bars.length;
+            b.click();
+            if (bars.length === n) break;
+            b = bars[bars.length - 1];
+          }
+        }
+        quick = false;
+        lit = null;
+        for (const o of bars) o.classList.remove('is-current');
+      });
+      if (img.complete && img.naturalWidth) restore(); else img.addEventListener('load', restore, { once: true });
     }
     // On a phone the picture fills the height and pans sideways; start with
     // the figure in the middle of the screen.

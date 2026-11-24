@@ -293,6 +293,12 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
   animation: pane-arrive 1.2s ease-out, door-breathe 2.4s ease-in-out 1.2s infinite alternate;
 }
 .pane-door:hover { border-color: #fff; }
+.pane-door.at-dot { transform: translateY(-50%); }
+.pane-door[data-label]:hover::after {
+  content: attr(data-label); position: absolute; left: 0; top: calc(100% + 8px);
+  padding: 0.35em 0.7em; background: #000; color: #fff; border: 1px solid #fff;
+  font-size: clamp(11px, 1cqw, 16px); line-height: 1.4; white-space: nowrap; pointer-events: none;
+}
 @keyframes door-breathe { from { box-shadow: 0 0 0 rgba(255, 255, 255, 0); } to { box-shadow: 0 0 18px rgba(255, 255, 255, 0.35); } }
 @media (prefers-reduced-motion: reduce) { .pane-door { animation: none; } }
 .pane-dot.is-arriving { animation: pane-arrive 1.2s ease-out, pane-glow 1.4s ease-in-out 1.2s infinite alternate; }
