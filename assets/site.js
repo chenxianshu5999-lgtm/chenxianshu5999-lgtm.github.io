@@ -623,7 +623,11 @@ const render = {
     let prevDone = null;
     for (let l of lines) {
       // Back from the room behind the door, the door's line asks something else.
-      if (entries.length === back && l.againText) l = { ...l, text: l.againText };
+      // Left before the end, it asks something else again.
+      if (entries.length === back) {
+        const t = T1_STATE === 'finished' ? l.againText : T1_STATE === 'started' ? l.quitText : null;
+        if (t) l = { ...l, text: t };
+      }
       const dot = el('button', 'pane-dot');
       const group = { bars: [], read: false };
       // Folding and unfolding cross-fade: the bars fade as one, the dot fades
@@ -858,6 +862,10 @@ const render = {
 };
 // Doors found in T0 during this visit (forgotten on reload).
 const OPENED_DOORS = new Set();
+// How the last time through T1 went: 'started' if the visitor left before the
+// end, 'finished' if they saw it through. T1 reports this from its frame.
+let T1_STATE = null;
+window.substanzT1 = (state) => { T1_STATE = state; };
 const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', t1: 'T1', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
 const HIDDEN_NAV = ['t0'];

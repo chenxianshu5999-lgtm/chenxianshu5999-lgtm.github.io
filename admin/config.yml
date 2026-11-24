@@ -103,7 +103,8 @@ collections:
               - { name: dot, label: "圆点颜色（留空则同底色）", widget: string, required: false }
               - { name: after, label: 等上一条读完才出现圆点, widget: boolean, default: false, required: false }
               - { name: door, label: "读完后在旁边出现黑色方块，点进去到（如 #t1；留空则没有）", widget: string, required: false }
-              - { name: againText, label: 进过黑色方块回来后，再点这个圆点说的话（留空则照原样）, widget: string, required: false }
+              - { name: againText, label: 在黑色方块里学完回来后，再点这个圆点说的话（留空则照原样）, widget: string, required: false }
+              - { name: quitText, label: 没学完就回来时，再点这个圆点说的话（留空则照原样）, widget: string, required: false }
               - { name: doorLabel, label: 鼠标放到黑色方块上时显示的字, widget: string, required: false }
               - name: then
                 label: 接续台词（点完上一条后出现在它下方）

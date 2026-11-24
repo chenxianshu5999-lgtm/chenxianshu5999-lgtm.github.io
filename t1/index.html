@@ -64,7 +64,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
   <div id="talk" aria-live="polite"></div>
   <div class="tools">
     <button class="tool" id="again" hidden>再放一遍</button>
-    <button class="tool" id="restart" hidden>回家</button>
+    <button class="tool" id="restart">回家</button>
   </div>
 </div>
 
@@ -487,7 +487,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
   }
 
   async function run(){
-    missed=0; restartBtn.hidden=true; againBtn.hidden=true;
+    missed=0; againBtn.hidden=true; tell('started');
     setMode('sew'); cur=0; u=0;
     for(var beat of lesson.beats||[]){
       clearTalk();
@@ -500,8 +500,10 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
     clearTalk(); againBtn.hidden=true;
     var end=lesson.ending||{};
     await sayLine(missed?(end.missed||'差不多。'):(end.clean||'会了。'),false);
-    restartBtn.hidden=false;
+    tell('finished');
   }
+  // 告诉外面的网站：这次进来了没有、学完了没有（T0 的蓝球据此换说法）
+  function tell(state){ try{ var t=window.top; if(t&&t!==window&&t.substanzT1) t.substanzT1(state); }catch(e){} }
   restartBtn.addEventListener('click',function(){ try{ (window.top||window).location.hash='t0'; }catch(e){ location.href='../#t0'; } });
   document.addEventListener('keydown',function(e){
     if((e.key===' '||e.key==='Enter')&&waiting&&!(e.target.closest&&e.target.closest('button'))){ e.preventDefault(); waiting(); }
