@@ -739,6 +739,15 @@ const render = {
     f.src = asset('/t1/');
     f.title = 'T1';
     f.setAttribute('allowfullscreen', '');
+    // Fill exactly what is left of the screen below whatever sits above the
+    // frame (on a phone, the site's top bar), so the bottom never falls off.
+    const fit = () => {
+      if (!f.isConnected) { window.removeEventListener('resize', fit); return; }
+      const top = f.getBoundingClientRect().top + window.scrollY;
+      f.style.height = `${Math.max(360, window.innerHeight - top)}px`;
+    };
+    requestAnimationFrame(fit);
+    window.addEventListener('resize', fit);
     return f;
   },
 

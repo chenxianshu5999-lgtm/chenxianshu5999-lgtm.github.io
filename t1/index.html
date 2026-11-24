@@ -40,8 +40,11 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
 .tool:focus-visible,.ask button:focus-visible,.line:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media (max-width:640px){
   .legend{display:none}
-  #talk{left:12px;bottom:60px;width:calc(100% - 24px)}
-  .line{font-size:14px}
+  .hud{font-size:11px;top:8px;left:12px}
+  #talk{left:12px;bottom:64px;width:calc(100% - 24px);gap:8px}
+  .line{font-size:14px;padding:.45em .7em;min-height:0}
+  .ask button{font-size:13px;padding:.4em .7em}
+  .tools{right:12px;bottom:14px}
 }
 </style>
 </head>
@@ -103,10 +106,14 @@ html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans
     var t=Math.tan(20*Math.PI/180);
     // 下面留出台词条的地方，镜头往后退一点、目标往下压一点
     var dist=Math.max((13.5/2)/t,(11.5/2)/(t*camera.aspect));
+    // 竖屏（手机）：画面上半给模型，下半留给台词条，所以镜头对准的点往下挪，模型往上走
+    var tall=camera.aspect<0.9;
+    tgtBase.set(0, tall?-1.6:0.55, 0);
+    if(tall) dist*=0.92;
     var az=0.26, el=0.14;
     camBase.set(dist*Math.sin(az)*Math.cos(el), tgtBase.y+dist*Math.sin(el), dist*Math.cos(az)*Math.cos(el));
-    if(fitted) return; fitted=true;
-    camera.position.copy(camBase); controls.update();
+    if(fitted&&userMoved) return; fitted=true;
+    camera.position.copy(camBase); controls.target.copy(tgtBase); controls.update();
   }
 
   function slotPos(p,row,col){
