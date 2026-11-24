@@ -626,18 +626,44 @@ const render = {
       if (entries.length === back && l.againText) l = { ...l, text: l.againText };
       const dot = el('button', 'pane-dot');
       const group = { bars: [], read: false };
+      // Folding and unfolding cross-fade: the bars fade as one, the dot fades
+      // the other way, and the door fades out, moves, and fades back in.
+      const FADE = still ? 0 : 380;
+      const fadeIn = (node) => {
+        node.classList.add('is-faded');
+        requestAnimationFrame(() => requestAnimationFrame(() => node.classList.remove('is-faded')));
+      };
+      const moveDoor = (to) => {
+        const door = l.door && doors[l.door];
+        if (!door) return;
+        door.classList.add('is-faded');
+        setTimeout(() => { placeDoor(l, to); door.classList.remove('is-faded'); }, FADE);
+      };
       group.fold = () => {
-        for (const b of group.bars) { b.hidden = true; b.classList.remove('is-current'); }
+        if (group.busy) return;
+        group.busy = true;
+        for (const b of group.bars) { b.classList.add('is-faded'); b.classList.remove('is-current'); }
         if (lit && group.bars.includes(lit)) lit = null;
         dot.hidden = false; dot.classList.remove('is-arriving');
-        fig.append(dot);
-        if (l.door && doors[l.door]) placeDoor(l, null);
+        fig.append(dot); fadeIn(dot);
+        moveDoor(null);
+        setTimeout(() => {
+          for (const b of group.bars) { b.hidden = true; b.classList.remove('is-faded'); }
+          group.busy = false;
+        }, FADE);
       };
       group.unfold = () => {
-        for (const b of group.bars) b.hidden = false;
+        if (group.busy) return;
+        group.busy = true;
+        dot.classList.add('is-faded');
+        for (const b of group.bars) { b.hidden = false; fadeIn(b); }
         const last = group.bars[group.bars.length - 1];
-        light(last);
-        if (l.door && doors[l.door]) placeDoor(l, last);
+        moveDoor(last);
+        setTimeout(() => {
+          dot.remove(); dot.classList.remove('is-faded');
+          light(last);
+          group.busy = false;
+        }, FADE);
       };
       let release;
       const ready = new Promise((r) => { release = r; });
@@ -652,8 +678,9 @@ const render = {
       dot.style.setProperty('--dot', l.dot || l.bg || '#c9d62a');
       dot.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (group.read) { group.unfold(); return; }
         dot.remove();
-        if (group.read) group.unfold(); else bar.play();
+        bar.play();
       });
       const i = entries.length;
       if (l.after && prevDone && !(back >= 0 && i <= back)) {
