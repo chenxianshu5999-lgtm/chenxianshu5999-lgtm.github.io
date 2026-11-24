@@ -616,6 +616,17 @@ const render = {
     return wrap;
   },
 
+  // Hidden room: Chen Xiansheng walks the visitor through the two-pillar test,
+  // a 3D model with his lines and questions laid over it. The page itself is
+  // /t1/index.html; its script is content/t1.json.
+  t1() {
+    const f = el('iframe', 'lesson-frame');
+    f.src = asset('/t1/');
+    f.title = 'T1';
+    f.setAttribute('allowfullscreen', '');
+    return f;
+  },
+
   // Hidden room: the downlink screen of the Qiyesi space telescope, reached
   // from its row in the register. With no footage set it stays a dead screen.
   telescope(data) {
@@ -734,9 +745,9 @@ const render = {
     return frag;
   },
 };
-const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', telescope: 'Qiyesi Telescope' };
+const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', t1: 'T1', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
-const HIDDEN_NAV = ['t0'];
+const HIDDEN_NAV = ['t0', 't1'];
 
 // Music bar in the top-right corner. Tracks come from content/music.json.
 // Browsers refuse to start sound before the visitor has touched the page, so

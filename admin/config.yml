@@ -113,6 +113,40 @@ collections:
                   - { name: gap, label: "与上一条的间距（百分比）", widget: number, value_type: float, required: false }
               - { name: hidden, label: 暂时隐藏, widget: boolean, default: false, required: false }
 
+      - name: t1
+        label: 隐藏页 T1（陈显生教双柱试验：3D + 台词 + 出题）
+        file: content/t1.json
+        fields:
+          - { name: bg, label: "台词条底色", widget: string, required: false }
+          - { name: color, label: "台词条字色", widget: string, required: false }
+          - name: beats
+            label: 一段一段（按顺序：先说 → 放动画 → 再说 → 出题）
+            widget: list
+            summary: "{{fields.play}} {{fields.say}}"
+            fields:
+              - { name: say, label: 放动画前说的话（一条一行）, widget: list, required: false }
+              - { name: play, label: "放哪一段动画（如 read、ann#1、rowA#2-done；留空则不放）", widget: string, required: false }
+              - { name: mode, label: "做法（sew＝缝，free＝不缝；留空则不变）", widget: string, required: false }
+              - { name: speed, label: 播放速度（默认 1）, widget: number, value_type: float, required: false }
+              - { name: after, label: 动画放完说的话（一条一行）, widget: list, required: false }
+              - name: quiz
+                label: 出题（可不填）
+                widget: object
+                required: false
+                fields:
+                  - { name: q, label: 题目, widget: text }
+                  - { name: options, label: 选项, widget: list }
+                  - { name: answer, label: 正确的是第几个（从 1 数）, widget: number, value_type: int }
+                  - { name: right, label: 答对后他说, widget: string, required: false }
+                  - { name: wrong, label: 答错后他说, widget: string, required: false }
+          - name: ending
+            label: 结尾
+            widget: object
+            required: false
+            fields:
+              - { name: clean, label: 全答对时说, widget: string, required: false }
+              - { name: missed, label: 有答错时说, widget: string, required: false }
+
       - name: shop
         label: Shop（环形塔物贩协会）
         file: content/shop.json

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T1</title>
+<style>
+:root{
+  --ink:#000;--bone:#ece7da;--mute:#8d97a6;--line:#2a3443;
+  --loose:#58a79f;--tense:#f1b24a;--anti:#e4594d;
+  --bar:#c9d62a;--bar-ink:#fff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+#stage{position:fixed;inset:0;overflow:hidden}
+#stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;left:16px;top:12px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;pointer-events:none}
+.hud b{color:var(--bone);font-weight:600}
+.legend{position:absolute;right:16px;top:12px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mute);pointer-events:none}
+.legend span{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.ringdot{width:10px;height:10px;border-radius:50%;border:2px solid;display:inline-block}
+
+/* 陈显生的台词条：和 T0 一样的底色条，一条一条打出来 */
+#talk{position:absolute;left:20px;bottom:20px;width:min(560px,calc(100% - 40px));display:flex;flex-direction:column;align-items:flex-start;gap:10px;pointer-events:none}
+.line{pointer-events:auto;margin:0;padding:.55em .8em;max-width:100%;min-height:2.6em;background:var(--bar);color:var(--bar-ink);
+  border:2px solid rgba(255,255,255,0);box-shadow:0 2px 10px rgba(0,0,0,.45);font-size:15px;line-height:1.5;white-space:pre-wrap;cursor:pointer;
+  transition:box-shadow .5s ease,border-color .5s ease}
+.line.is-current{border-color:#fff;box-shadow:0 0 6px 1px rgba(255,255,255,.75),0 0 22px 6px rgba(255,255,255,.35),0 2px 10px rgba(0,0,0,.45)}
+.line.is-current.is-done::after{content:" ▸";animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.ask{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px}
+.ask button,.tool{font:inherit;font-size:14px;background:#000;color:#fff;border:1px solid #fff;padding:.45em .9em;cursor:pointer}
+.ask button:hover,.tool:hover{background:#fff;color:#000}
+.ask button[disabled]{opacity:.35;cursor:default;background:#000;color:#fff}
+.ask button.is-right{background:#fff;color:#000;opacity:1}
+.tools{position:absolute;right:16px;bottom:16px;display:flex;gap:8px}
+.tool[hidden]{display:none}
+.tool:focus-visible,.ask button:focus-visible,.line:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:640px){
+  .legend{display:none}
+  #talk{left:12px;bottom:60px;width:calc(100% - 24px)}
+  .line{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div class="hud">
+    <span>正在拆 <b id="hudRow">—</b></span>
+    <span>碰头 <b id="hudMeet">0</b> / 7</span>
+    <span>反核子送入 <b id="hudAnti">0</b> 个</span>
+    <span>两柱错位 <b id="hudLag">0</b> 个</span>
+  </div>
+  <div class="legend">
+    <span>核子 <i class="dot" style="background:var(--bone)"></i></span>
+    <span>松环 <i class="ringdot" style="border-color:var(--loose)"></i></span>
+    <span>有空位的环 <i class="ringdot" style="border-color:#8b9bb0"></i></span>
+    <span>绷环 <i class="ringdot" style="border-color:var(--tense)"></i></span>
+    <span>反核子 <i class="dot" style="background:var(--anti)"></i></span>
+  </div>
+  <div id="talk" aria-live="polite"></div>
+  <div class="tools">
+    <button class="tool" id="again" hidden>再放一遍</button>
+    <button class="tool" id="restart" hidden>从头再来</button>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script>
+(function(){
+  'use strict';
+  /* ================= 3D：沿用「双柱试验 3D」 ================= */
+  var COLS=11, ROWS=7, D=0.5, L=D/Math.sqrt(3), CX=D*0.866, SEAM=0.11, XE=SEAM+L*0.5, Y0=-4.6, MOLY=3.6, RR=0.092;
+  var C_INK=0x000000, C_BONE=0xece7da, C_LOOSE=0x58a79f, C_TENSE=0xf1b24a, C_ANTI=0xe4594d, C_CARBON=0x7d8ba0, C_HYD=0xd6dde6, C_MUTE=0x8d97a6;
+  var MEET={ann:1,sew:1,sewn:1,unsew:1,prod:1};
+  function cl(x){return x<0?0:(x>1?1:x);}
+  function sm(x){x=cl(x);return x*x*(3-2*x);}
+  function lerp(a,b,t){return a+(b-a)*t;}
+
+  var canvas=document.getElementById('c'), stage=document.getElementById('stage');
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.setClearColor(C_INK,1);
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(40,1,0.1,400);
+  var controls=new THREE.OrbitControls(camera,canvas);
+  controls.enableDamping=true; controls.dampingFactor=0.08; controls.enablePan=false;
+  var tgtBase=new THREE.Vector3(0,0.55,0), camBase=new THREE.Vector3();
+  controls.target.copy(tgtBase);
+  scene.add(new THREE.AmbientLight(0xffffff,0.65));
+  var key=new THREE.DirectionalLight(0xffffff,0.75); key.position.set(4,8,10); scene.add(key);
+
+  var fitted=false, userMoved=false, zoomT=0;
+  controls.addEventListener('start',function(){ userMoved=true; });
+  function fitCamera(){
+    var w=stage.clientWidth||300, h=stage.clientHeight||300;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; camera.updateProjectionMatrix();
+    var t=Math.tan(20*Math.PI/180);
+    // 下面留出台词条的地方，镜头往后退一点、目标往下压一点
+    var dist=Math.max((13.5/2)/t,(11.5/2)/(t*camera.aspect));
+    var az=0.26, el=0.14;
+    camBase.set(dist*Math.sin(az)*Math.cos(el), tgtBase.y+dist*Math.sin(el), dist*Math.cos(az)*Math.cos(el));
+    if(fitted) return; fitted=true;
+    camera.position.copy(camBase); controls.update();
+  }
+
+  function slotPos(p,row,col){
+    var s=p?1:-1, ci=COLS-1-col;
+    return new THREE.Vector3(s*(XE+ci*CX), Y0+row*D+(ci%2?D/2:0), 0);
+  }
+  function tubeDirs(p){ var g=p?-1:1; return [[-g,0],[g*0.5,0.866],[g*0.5,-0.866]]; }
+  function ringAtoms(p,twistDeg,shiftX){
+    var cx=(p?1:-1)*2.13, tw=twistDeg*Math.PI/180, out=[], ipso=p?3:0;
+    function place(k,r){
+      var th=k*Math.PI/3, lx=Math.cos(th)*r, ly=Math.sin(th)*r;
+      return new THREE.Vector3(cx+lx+shiftX, MOLY+ly*Math.cos(tw), ly*Math.sin(tw));
+    }
+    for(var k=0;k<6;k++) out.push({el:'C',n:12,pos:place(k,1.39),k:k,ipso:k===ipso});
+    for(k=0;k<6;k++) if(k!==ipso) out.push({el:'H',n:1,pos:place(k,2.48),k:k,ipso:false});
+    return out;
+  }
+
+  var atoms=[], nucs=[], edgeOf=[[],[]], mode='sew', grid=[[],[]];
+  var gAtomC=new THREE.SphereGeometry(0.46,20,14), gAtomH=new THREE.SphereGeometry(0.27,16,12);
+  var gNuc=new THREE.SphereGeometry(0.1,12,10), gRing=new THREE.TorusGeometry(RR,0.011,6,22);
+  var mNuc=new THREE.MeshStandardMaterial({color:C_BONE,roughness:0.5});
+  var mRing=new THREE.MeshBasicMaterial({color:C_LOOSE}), mRingHi=new THREE.MeshBasicMaterial({color:0xb9f3ea}), mRingOpen=new THREE.MeshBasicMaterial({color:0x8b9bb0});
+
+  function buildAtoms(){
+    for(var p=0;p<2;p++){
+      var list=ringAtoms(p,p?44:0,0);
+      for(var i=0;i<list.length;i++){
+        var a=list[i];
+        var mat=new THREE.MeshStandardMaterial({color:a.el==='C'?C_CARBON:C_HYD,roughness:0.6,transparent:true});
+        var mesh=new THREE.Mesh(a.el==='C'?gAtomC:gAtomH,mat); scene.add(mesh);
+        atoms.push({p:p,el:a.el,n:a.n,k:a.k,ipso:a.ipso,start:a.pos.clone(),end:a.pos.clone(),mesh:mesh,mat:mat,nucs:[],op:1});
+      }
+    }
+  }
+  function setEndConfig(){
+    var good=ringAtoms(1,44,0), bad=ringAtoms(1,84,0.6), j=0;
+    for(var i=0;i<atoms.length;i++) if(atoms[i].p===1){ atoms[i].end.copy((mode==='sew'?good:bad)[j].pos); j++; }
+  }
+  function buildNucleons(){
+    for(var p=0;p<2;p++){
+      var mine=atoms.filter(function(a){return a.p===p;}), dirs=tubeDirs(p);
+      mine.sort(function(a,b){return Math.abs(b.start.x)-Math.abs(a.start.x);});
+      var slot=0;
+      for(var i=0;i<mine.length;i++){
+        for(var q=0;q<mine[i].n;q++){
+          var row=Math.floor(slot/COLS), col=slot%COLS, r=mine[i].el==='C'?0.26:0.05;
+          var jit=new THREE.Vector3((Math.random()-0.5)*2*r,(Math.random()-0.5)*2*r,(Math.random()-0.5)*2*r);
+          var mesh=new THREE.Mesh(gNuc,mNuc); scene.add(mesh);
+          var home=slotPos(p,row,col), rings=[], heads=[];
+          for(var t=0;t<3;t++){
+            var hx=home.x+dirs[t][0]*L, hy=home.y+dirs[t][1]*L;
+            heads.push([hx,hy]);
+            var rg=new THREE.Mesh(gRing,mRing);
+            rg.position.set(hx-dirs[t][0]*RR, hy-dirs[t][1]*RR, (t-1)*0.014);
+            rg.userData.base=rg.position.clone(); rg.visible=false; scene.add(rg); rings.push(rg);
+          }
+          var n={p:p,row:row,col:col,slot:slot,atom:mine[i],jit:jit,mesh:mesh,rings:rings,heads:heads,a:0,home:home};
+          mine[i].nucs.push(n); nucs.push(n); slot++;
+          if(col===COLS-1) edgeOf[p][row]=n;
+          (grid[p][row]=grid[p][row]||[])[col]=n;
+        }
+      }
+    }
+  }
+  function markFull(){
+    var sites={};
+    nucs.forEach(function(n){ for(var t=0;t<3;t++){ var k=n.p+':'+Math.round(n.heads[t][0]*50)+':'+Math.round(n.heads[t][1]*50); (sites[k]=sites[k]||[]).push([n,t]); } });
+    nucs.forEach(function(n){ n.full=[false,false,false]; });
+    Object.keys(sites).forEach(function(k){ if(sites[k].length===3) sites[k].forEach(function(e){ e[0].full[e[1]]=true; }); });
+    edgeOf[0][0].full[0]=true; edgeOf[1][0].full[0]=true;
+    nucs.forEach(function(n){ for(var t=0;t<3;t++) n.rings[t].material=n.full[t]?mRing:mRingOpen; });
+  }
+  var linkGeo, linkCol;
+  function buildLinks(){
+    var pos=new Float32Array(nucs.length*18); linkCol=new Float32Array(nucs.length*18);
+    nucs.forEach(function(n,i){ for(var t=0;t<3;t++) pos.set([n.home.x,n.home.y,0,n.heads[t][0],n.heads[t][1],0],i*18+t*6); });
+    linkGeo=new THREE.BufferGeometry();
+    linkGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    linkGeo.setAttribute('color',new THREE.BufferAttribute(linkCol,3));
+    scene.add(new THREE.LineSegments(linkGeo,new THREE.LineBasicMaterial({vertexColors:true})));
+    var gp=new Float32Array(nucs.length*3);
+    nucs.forEach(function(n,i){gp.set([n.home.x,n.home.y,0],i*3);});
+    var gg=new THREE.BufferGeometry(); gg.setAttribute('position',new THREE.BufferAttribute(gp,3));
+    scene.add(new THREE.Points(gg,new THREE.PointsMaterial({color:0x334155,size:0.07})));
+  }
+  var bondGeo=[],bondMat=[],bondPairs=[[],[]], midGeo, midMat;
+  function buildBonds(){
+    for(var p=0;p<2;p++){
+      var mine=atoms.filter(function(a){return a.p===p;});
+      var cs=mine.filter(function(a){return a.el==='C';}), hs=mine.filter(function(a){return a.el==='H';});
+      for(var i=0;i<6;i++) bondPairs[p].push([cs[i],cs[(i+1)%6]]);
+      hs.forEach(function(h){ bondPairs[p].push([h,cs.filter(function(c){return c.k===h.k;})[0]]); });
+      var g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(bondPairs[p].length*6),3));
+      var m=new THREE.LineBasicMaterial({color:C_MUTE,transparent:true});
+      scene.add(new THREE.LineSegments(g,m)); bondGeo.push(g); bondMat.push(m);
+    }
+    midGeo=new THREE.BufferGeometry();
+    midGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(6),3));
+    midMat=new THREE.LineBasicMaterial({color:C_BONE,transparent:true});
+    scene.add(new THREE.Line(midGeo,midMat));
+  }
+  var gTense=new THREE.TorusGeometry(RR,0.024,8,30);
+  var tense=[0,1].map(function(){ var m=new THREE.Mesh(gTense,new THREE.MeshBasicMaterial({color:C_TENSE,transparent:true})); m.visible=false; scene.add(m); return m; });
+  var anti=[0,1].map(function(){ var m=new THREE.Mesh(new THREE.SphereGeometry(0.11,12,10),new THREE.MeshStandardMaterial({color:C_ANTI,emissive:C_ANTI,emissiveIntensity:0.5})); m.visible=false; scene.add(m); return m; });
+  var flash=[0,1].map(function(){ var m=new THREE.Mesh(new THREE.SphereGeometry(0.22,12,10),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0})); scene.add(m); return m; });
+  var band=[0,1].map(function(p){
+    var m=new THREE.Mesh(new THREE.PlaneGeometry(10*CX+0.7,D*1.5),new THREE.MeshBasicMaterial({color:C_TENSE,transparent:true,opacity:0.09,depthWrite:false}));
+    m.position.set((p?1:-1)*(XE+5*CX),0,-0.08); m.visible=false; scene.add(m); return m;
+  });
+  function portPos(p){return new THREE.Vector3((p?1:-1)*0.3,0.25,0.4);}
+  function label(text,x,y,size,color){
+    var cv=document.createElement('canvas'), ctx=cv.getContext('2d');
+    var px=56, f='600 '+px+'px "Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.font=f; var w=Math.ceil(ctx.measureText(text).width)+24; cv.width=w; cv.height=px+24;
+    ctx.font=f; ctx.fillStyle=color; ctx.textBaseline='middle'; ctx.fillText(text,12,cv.height/2);
+    var tex=new THREE.CanvasTexture(cv); tex.minFilter=THREE.LinearFilter;
+    var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
+    sp.scale.set(size*w/cv.height,size,1); sp.position.set(x,y,0); scene.add(sp); return sp;
+  }
+
+  var steps=[], firstRestore=0, sealIdx=-1;
+  function buildSteps(){
+    steps=[];
+    function add(kind,dur,row){ steps.push({kind:kind,dur:dur,row:(row===undefined?-1:row)}); }
+    add('mol',2.5); add('read',5);
+    if(mode==='sew'){ add('hold',2.2); sealIdx=steps.length; add('seal',3); add('store',2.6); } else { sealIdx=-1; add('hold',2.2); }
+    firstRestore=steps.length;
+    if(mode==='sew'){
+      for(var r=ROWS-1;r>=0;r--){
+        var k=(r===ROWS-1)?1:0.5;
+        add('rowA',1.8*k,r); add('wait',0.8*k,r); add('ann',2.4*k,r); add('sew',1.5*k,r); add('sewn',2.0*k,r); add('unsew',1.2*k,r); add('prod',3.2*k,r); add('back',1.1*k,r);
+      }
+    }else add('free',9);
+    add('done',3);
+  }
+  function nucA(n,st,u){
+    switch(st.kind){
+      case 'mol': return 0;
+      case 'read': return sm((u*1.25-n.slot/76)/0.25);
+      case 'hold': case 'seal': case 'store': return 1;
+      case 'done': return 0;
+      case 'free':
+        var o=((ROWS-1-n.row)*COLS+n.col)/76, U=cl(u/(n.p?1:0.8));
+        return 1-sm((U*1.15-o)/0.15);
+    }
+    if(n.row>st.row) return 0;
+    if(n.row<st.row) return 1;
+    var edge=(n.col===COLS-1);
+    if(st.kind==='rowA'){ if(edge) return 1; var U2=cl(u/(n.p?1:0.72)); return 1-sm((U2*1.4-n.col/9)/0.4); }
+    if(!edge) return 0;
+    if(st.kind==='back') return 1-sm(u);
+    return 1;
+  }
+  var tmp=new THREE.Vector3();
+  var hudRow=document.getElementById('hudRow'), hudMeet=document.getElementById('hudMeet'), hudAnti=document.getElementById('hudAnti'), hudLag=document.getElementById('hudLag');
+
+  function apply(idx,u,time){
+    var st=steps[idx], restoring=idx>=firstRestore, i, p;
+    atoms.forEach(function(a){ a.mesh.position.copy(restoring?a.end:a.start); });
+    var meetRow=(mode==='sew'&&st.row>=0)?st.row:-1, inMeet=!!MEET[st.kind];
+    var eScale=1, r0=1, tOp=0, grow=0, sewK=0, antiVis=false, antiT=0, antiOut=false, fl=0, hi=false;
+    if(meetRow>=0){
+      if(st.kind==='ann'){
+        antiVis=u<0.56; antiT=sm(u/0.5); fl=Math.max(0,1-Math.abs(u-0.54)/0.1);
+        eScale=1-sm((u-0.5)/0.1); tOp=sm((u-0.56)/0.14); r0=1-tOp; grow=sm((u-0.66)/0.3); hi=u>0.6;
+      }else if(st.kind==='sew'){ eScale=0;r0=0; tOp=1; grow=1; sewK=sm(u); hi=true; }
+      else if(st.kind==='sewn'){ eScale=0;r0=0; tOp=1; grow=1; sewK=1; hi=true; }
+      else if(st.kind==='unsew'){ eScale=0;r0=0; tOp=1; grow=1; sewK=1-sm(u); hi=true; }
+      else if(st.kind==='prod'){
+        grow=1-sm((u-0.02)/0.3); eScale=sm((u-0.22)/0.16); fl=Math.max(0,1-Math.abs(u-0.28)/0.08)*0.6;
+        antiVis=u>0.24&&u<0.72; antiOut=true; antiT=sm((u-0.38)/0.32);
+        var relax=sm((u-0.72)/0.22); tOp=1-relax; r0=relax; hi=u<0.9;
+      }
+    }
+    var sealU=(sealIdx<0||idx<sealIdx)?0:(idx>sealIdx?1:u), dropK=sm((sealU-0.45)/0.5);
+    var shake=(idx===sealIdx&&u>0.05&&u<0.55)?(1+0.12*Math.sin(time*42)):1;
+    var hiN=(hi&&meetRow>=1)?[grid[0][meetRow-1][COLS-2],grid[1][meetRow-1][COLS-2]]:null;
+    var back=[0,0];
+    for(i=0;i<nucs.length;i++){
+      var n=nucs[i], a=nucA(n,st,u); n.a=a;
+      var isEdge=(n.row===meetRow&&n.col===COLS-1&&inMeet), sc=isEdge?eScale:1;
+      tmp.copy(n.atom.mesh.position).add(n.jit);
+      n.mesh.position.lerpVectors(tmp,n.home,a);
+      n.mesh.position.z+=Math.sin(Math.PI*a)*1.3;
+      n.mesh.visible=a>0.03&&sc>0.02;
+      n.mesh.scale.setScalar(Math.max(sc,0.001));
+      var hung=a>0.97;
+      for(var t=0;t<3;t++){
+        var rg=n.rings[t], rs=(isEdge&&t===0)?r0:1, dy=0;
+        if(!n.full[t]){ rs*=(1-dropK); dy=-0.55*dropK; }
+        rs*=shake;
+        rg.visible=hung&&rs>0.02;
+        rg.scale.setScalar(Math.max(rs,0.001));
+        rg.position.y=rg.userData.base.y+dy;
+        if(n.full[t]) rg.material=(hiN&&t===1&&(n===hiN[0]||n===hiN[1]))?mRingHi:mRing;
+      }
+      n.tubeV=sm((a-0.9)/0.1)*(isEdge?sc:1);
+      if(a<0.5) back[n.p]++;
+    }
+    atoms.forEach(function(at){
+      var s=0; for(var j=0;j<at.nucs.length;j++) s+=1-at.nucs[j].a;
+      at.op=s/at.nucs.length; at.mat.opacity=sm(at.op); at.mesh.visible=at.op>0.02;
+    });
+    for(p=0;p<2;p++){
+      var arr=bondGeo[p].attributes.position.array, mn=1;
+      bondPairs[p].forEach(function(pr,k){
+        var A=pr[0].mesh.position,B=pr[1].mesh.position;
+        arr[k*6]=A.x;arr[k*6+1]=A.y;arr[k*6+2]=A.z;arr[k*6+3]=B.x;arr[k*6+4]=B.y;arr[k*6+5]=B.z;
+        mn=Math.min(mn,pr[0].op,pr[1].op);
+      });
+      bondGeo[p].attributes.position.needsUpdate=true; bondMat[p].opacity=sm(mn);
+    }
+    var ip=atoms.filter(function(a){return a.ipso;});
+    var m=midGeo.attributes.position.array, PA=ip[0].mesh.position, PB=ip[1].mesh.position;
+    m[0]=PA.x;m[1]=PA.y;m[2]=PA.z;m[3]=PB.x;m[4]=PB.y;m[5]=PB.z; midGeo.attributes.position.needsUpdate=true;
+    midMat.opacity=sm(Math.min(ip[0].op,ip[1].op));
+    midMat.color.setHex(restoring&&mode==='free'?C_ANTI:C_BONE);
+    for(i=0;i<nucs.length;i++){
+      var v=nucs[i].tubeV, cr=0.13+0.42*v, cg=0.16+0.42*v, cb=0.21+0.40*v;
+      for(var q=0;q<6;q++){ linkCol[i*18+q*3]=cr; linkCol[i*18+q*3+1]=cg; linkCol[i*18+q*3+2]=cb; }
+    }
+    linkGeo.attributes.color.needsUpdate=true;
+    for(p=0;p<2;p++){
+      var g=p?-1:1;
+      if(meetRow>=0){
+        var e=edgeOf[p][meetRow], base=e.rings[0].userData.base, sx=p?1:-1;
+        if(inMeet){
+          var cx=lerp(Math.abs(base.x), lerp(0.32,0.25,sewK), grow), rad=lerp(RR, lerp(0.21,0.27,sewK), grow);
+          tense[p].visible=tOp>0.02; tense[p].material.opacity=tOp;
+          tense[p].scale.setScalar(rad/RR*(st.kind==='sewn'?1+0.03*Math.sin(time*5):1));
+          tense[p].position.set(sx*cx, base.y, base.z+g*0.04*sewK);
+          tense[p].rotation.set(0,g*0.3*sewK,0);
+          var port=portPos(p);
+          if(!antiOut) anti[p].position.lerpVectors(port,e.home,antiT);
+          else { tmp.set(e.home.x-g*0.02,e.home.y+0.26,0.22); anti[p].position.lerpVectors(tmp,port,antiT); }
+          anti[p].visible=antiVis;
+          flash[p].position.copy(e.home); flash[p].material.opacity=fl*0.85; flash[p].scale.setScalar(0.6+fl*1.2);
+        }else{ tense[p].visible=false; anti[p].visible=false; flash[p].material.opacity=0; }
+        band[p].visible=true; band[p].position.y=Y0+meetRow*D+D/4;
+      }else{ tense[p].visible=false; anti[p].visible=false; flash[p].material.opacity=0; band[p].visible=false; }
+    }
+    var meets=0, sent=0;
+    if(mode==='sew'){
+      for(i=firstRestore;i<=idx;i++){
+        if(steps[i].kind==='ann'&&(i<idx||u>0.5)) sent+=2;
+        if(steps[i].kind==='unsew'&&(i<idx||u>=1)) meets++;
+      }
+    }
+    var lag=restoring?Math.abs(back[0]-back[1]):0;
+    if(st.kind==='done') lag=0;
+    hudRow.textContent=meetRow>=0?('第 '+(ROWS-meetRow)+' 排'):'—';
+    hudMeet.textContent=meets; hudAnti.textContent=sent; hudLag.textContent=lag;
+    var wantZoom=meetRow>=0&&inMeet&&meetRow===ROWS-1;
+    return {zoom:wantZoom, y:meetRow>=0?(Y0+meetRow*D-0.2):Y0+ROWS*D/2};
+  }
+
+  /* ================= 播放：只按台词要求的那一段放 ================= */
+  var cur=0, u=0, playing=false, speed=1, last=0, seamY=Y0+ROWS*D, endIdx=0, onEnd=null;
+  var focusPos=new THREE.Vector3(), focusTgt=new THREE.Vector3();
+  function frame(now){
+    requestAnimationFrame(frame);
+    var dt=Math.min(0.05,(now-last)/1000||0); last=now;
+    if(playing){
+      u+=dt*speed/steps[cur].dur;
+      if(u>=1){
+        if(cur<endIdx){ cur++; u=0; }
+        else { u=1; playing=false; var f=onEnd; onEnd=null; if(f) f(); }
+      }
+    }
+    var cam=apply(cur,u,now/1000);
+    if(!userMoved){
+      zoomT+=((cam.zoom?1:0)-zoomT)*Math.min(1,dt*3.5);
+      seamY+=(cam.y-seamY)*Math.min(1,dt*5);
+      focusTgt.set(0,seamY,0); focusPos.set(0.55,seamY+0.2,5.2);
+      var z=sm(zoomT);
+      camera.position.lerpVectors(camBase,focusPos,z);
+      controls.target.lerpVectors(tgtBase,focusTgt,z);
+    }
+    controls.update(); renderer.render(scene,camera);
+  }
+  function setMode(m){
+    if(m===mode&&steps.length) return;
+    mode=m; setEndConfig(); buildSteps(); cur=0; u=0;
+  }
+  // "rowA#1" = 从顶上数第 1 排的 rowA 这一步；"read" = 第一个 read；"rowA#2-done" = 从那一步放到 done
+  function findStep(key,fromEnd){
+    var kind=key, row=-2, h=key.indexOf('#');
+    if(h>=0){ kind=key.slice(0,h); row=ROWS-parseInt(key.slice(h+1),10); }
+    var hit=-1;
+    for(var i=0;i<steps.length;i++){
+      if(steps[i].kind===kind&&(row===-2||steps[i].row===row)){ hit=i; if(!fromEnd) break; }
+    }
+    return hit;
+  }
+  function playRange(spec,sp){
+    return new Promise(function(res){
+      var parts=String(spec).split('-'), a=findStep(parts[0],false), b=findStep(parts[1]||parts[0],true);
+      if(a<0||b<0){ res(); return; }
+      cur=a; u=0; endIdx=b; speed=sp||1; playing=true; userMoved=false; onEnd=res;
+    });
+  }
+
+  /* ================= 陈显生的台词和题 ================= */
+  var talk=document.getElementById('talk'), againBtn=document.getElementById('again'), restartBtn=document.getElementById('restart');
+  var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var lesson=null, missed=0, lastPlay=null, waiting=null;
+
+  function clearTalk(){ talk.replaceChildren(); }
+  function lightOnly(bar){ for(var c of talk.querySelectorAll('.line')) c.classList.toggle('is-current',c===bar); }
+  // 打出一条，打完后点它（或按空格）才往下
+  function sayLine(text,needClick){
+    return new Promise(function(res){
+      var bar=document.createElement('p'); bar.className='line'; bar.tabIndex=0;
+      if(lesson.bg) bar.style.background=lesson.bg;
+      if(lesson.color) bar.style.color=lesson.color;
+      talk.append(bar); lightOnly(bar);
+      var chars=Array.from(text), n=0, typed=false;
+      function done(){ typed=true; bar.textContent=text; bar.classList.add('is-done'); if(!needClick){ res(); } else waiting=go; }
+      function go(){ if(!typed){ done(); return; } bar.removeEventListener('click',go); waiting=null; bar.classList.remove('is-done'); res(); }
+      bar.addEventListener('click',go);
+      if(still){ done(); return; }
+      (function step(){
+        if(typed) return;
+        bar.textContent=chars.slice(0,++n).join('');
+        if(n<chars.length) setTimeout(step,28); else done();
+      })();
+      // 打字的时候点一下就直接打完
+      waiting=go;
+    });
+  }
+  async function sayAll(lines){ for(var l of lines||[]){ await sayLine(l,true); } }
+  function trimTalk(keep){ var ls=talk.querySelectorAll('.line'); for(var i=0;i<ls.length-keep;i++) ls[i].remove(); }
+
+  async function play(beat){
+    if(!beat.play) return;
+    lastPlay={spec:beat.play,speed:beat.speed||1};
+    againBtn.hidden=true;
+    await playRange(beat.play,beat.speed||1);
+    againBtn.hidden=false;
+  }
+  againBtn.addEventListener('click',function(){
+    if(!lastPlay||playing) return;
+    againBtn.hidden=true;
+    playRange(lastPlay.spec,lastPlay.speed).then(function(){ againBtn.hidden=false; });
+  });
+
+  function ask(quiz){
+    return new Promise(function(res){
+      var box=document.createElement('div'); box.className='ask';
+      var opts=quiz.options||[], right=(quiz.answer||1)-1, wrongOnce=false;
+      opts.forEach(function(o,i){
+        var b=document.createElement('button'); b.type='button'; b.textContent=o;
+        b.addEventListener('click',async function(){
+          if(box.dataset.busy) return; box.dataset.busy='1';
+          var old=talk.querySelector('.reply'); if(old) old.remove();
+          if(i===right){
+            b.classList.add('is-right');
+            for(var x of box.querySelectorAll('button')) x.disabled=true;
+            b.disabled=false;
+            await sayLine(quiz.right||'对。',true);
+            res();
+          }else{
+            if(!wrongOnce){ missed++; wrongOnce=true; }
+            b.disabled=true;
+            await sayLine(quiz.wrong||'不对。再看。',false);
+            talk.lastElementChild.classList.add('reply');
+            delete box.dataset.busy;
+          }
+        });
+        box.append(b);
+      });
+      talk.append(box);
+    });
+  }
+
+  async function run(){
+    missed=0; restartBtn.hidden=true; againBtn.hidden=true;
+    setMode('sew'); cur=0; u=0;
+    for(var beat of lesson.beats||[]){
+      clearTalk();
+      if(beat.mode&&beat.mode!==mode){ setMode(beat.mode); var h=findStep('hold'); if(h>=0){ cur=h; u=1; } }
+      await sayAll(beat.say);
+      await play(beat);
+      if(beat.after&&beat.after.length){ trimTalk(0); await sayAll(beat.after); }
+      if(beat.quiz){ trimTalk(1); await sayLine(beat.quiz.q,false); await ask(beat.quiz); }
+    }
+    clearTalk(); againBtn.hidden=true;
+    var end=lesson.ending||{};
+    await sayLine(missed?(end.missed||'差不多。'):(end.clean||'会了。'),false);
+    restartBtn.hidden=false;
+  }
+  restartBtn.addEventListener('click',function(){ run(); });
+  document.addEventListener('keydown',function(e){
+    if((e.key===' '||e.key==='Enter')&&waiting&&!(e.target.closest&&e.target.closest('button'))){ e.preventDefault(); waiting(); }
+  });
+
+  buildAtoms(); buildNucleons(); markFull(); buildLinks(); buildBonds();
+  label('柱 1',-2.4,Y0-0.7,0.42,'#8d97a6'); label('柱 2',2.4,Y0-0.7,0.42,'#8d97a6');
+  label('反核子的口',0,0.75,0.34,'#e4594d'); label('联苯',0,MOLY+2.95,0.46,'#ece7da');
+  mode=''; setMode('sew');
+  fitCamera(); window.addEventListener('resize',fitCamera);
+  if(window.ResizeObserver) new ResizeObserver(fitCamera).observe(stage);
+  requestAnimationFrame(frame);
+
+  fetch('../content/t1.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(j){ lesson=j; run(); })
+    .catch(function(){ lesson={beats:[]}; sayLine('……',false); });
+})();
+</script>
+</body>
+</html>
