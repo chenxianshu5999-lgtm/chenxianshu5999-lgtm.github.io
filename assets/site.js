@@ -727,7 +727,7 @@ const render = {
   // /t1/index.html; its script is content/t1.json.
   t1() {
     const f = el('iframe', 'lesson-frame');
-    f.src = asset('/t1/') + '?v=2611250123';
+    f.src = asset('/t1/') + '?v=2611250149';
     f.title = 'T1';
     f.setAttribute('allowfullscreen', '');
     // Fill exactly what is left of the screen below whatever sits above the
