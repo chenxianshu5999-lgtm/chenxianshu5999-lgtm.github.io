@@ -310,10 +310,10 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
 .pane img { display: block; width: 100%; height: auto; }
 .pane-things { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .pane-thing { outline: none; }
-.pane-thing polygon { fill: transparent; pointer-events: all; cursor: pointer; }
-.pane-lift { opacity: 0; pointer-events: none; transition: opacity 0.38s ease; filter: url(#pane-thing-glow); }
+.pane-thing .pane-hit { fill: transparent; pointer-events: all; cursor: pointer; }
+.pane-lift { opacity: 0; pointer-events: none; transition: opacity 0.38s ease; }
 .pane-thing.is-new .pane-lift { animation: thing-breathe 2.4s ease-in-out infinite alternate; }
-.pane-thing.is-speaking .pane-lift { opacity: 1; animation: none; filter: url(#pane-thing-glow); }
+.pane-thing.is-speaking .pane-lift { opacity: 1; animation: none; }
 @media (hover: hover) { .pane-thing:hover .pane-lift { opacity: 1; animation: none; } }
 .pane-thing:focus-visible .pane-lift { opacity: 1; animation: none; }
 @keyframes thing-breathe { from { opacity: 0; } to { opacity: 0.45; } }

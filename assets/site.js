@@ -700,41 +700,32 @@ const render = {
       svg.setAttribute('preserveAspectRatio', 'none');
       const defs = document.createElementNS(NS, 'defs');
       svg.append(defs);
-      // A white halo around the cut-out, drawn by SVG itself (Safari draws CSS
-      // filters on SVG parts unreliably). Sizes are in the picture's pixels.
-      defs.insertAdjacentHTML('beforeend',
-        '<filter id="pane-thing-glow" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">'
-        + '<feMorphology in="SourceAlpha" operator="dilate" radius="6" result="grow"/>'
-        + '<feFlood flood-color="#fff"/><feComposite in2="grow" operator="in" result="ring"/>'
-        + '<feGaussianBlur in="ring" stdDeviation="40" result="halo"/>'
-        + '<feComponentTransfer in="SourceGraphic" result="lit"><feFuncR type="linear" slope="1.15"/><feFuncG type="linear" slope="1.15"/><feFuncB type="linear" slope="1.15"/></feComponentTransfer>'
-        + '<feMerge><feMergeNode in="halo"/><feMergeNode in="halo"/><feMergeNode in="ring"/><feMergeNode in="lit"/></feMerge>'
-        + '</filter>');
       // Under the bars and dots, so a bar lying across the cicada still takes its click.
       img.after(svg);
       things.forEach((t, k) => {
         const pts = t.points.map((p) => p.join(',')).join(' ');
-        const id = `pane-cut-${Date.now().toString(36)}-${k}`;
-        const clip = document.createElementNS(NS, 'clipPath');
-        clip.id = id;
-        const cp = document.createElementNS(NS, 'polygon');
-        cp.setAttribute('points', pts);
-        clip.append(cp); defs.append(clip);
         const g = document.createElementNS(NS, 'g');
         g.setAttribute('class', 'pane-thing is-new');
         g.setAttribute('tabindex', '0');
         g.setAttribute('role', 'button');
         g.setAttribute('aria-label', t.label || 'Open');
-        // The cut-out copy of the picture lifts when pointed at.
+        // The outline itself is the light: plain white strokes laid over one
+        // another, wide and faint to narrow and solid. No filters, no clipping,
+        // so every browser draws it. Widths are in the picture's pixels.
         const lift = document.createElementNS(NS, 'g');
         lift.setAttribute('class', 'pane-lift');
-        const copy = document.createElementNS(NS, 'image');
-        copy.setAttribute('href', img.src);
-        copy.setAttribute('width', W); copy.setAttribute('height', H);
-        copy.setAttribute('preserveAspectRatio', 'none');
-        copy.setAttribute('clip-path', `url(#${id})`);
-        lift.append(copy);
+        for (const [w, o] of [[110, 0.07], [80, 0.09], [54, 0.12], [34, 0.18], [20, 0.3], [9, 1]]) {
+          const ring = document.createElementNS(NS, 'polygon');
+          ring.setAttribute('points', pts);
+          ring.setAttribute('fill', 'none');
+          ring.setAttribute('stroke', '#fff');
+          ring.setAttribute('stroke-width', w);
+          ring.setAttribute('stroke-opacity', o);
+          ring.setAttribute('stroke-linejoin', 'round');
+          lift.append(ring);
+        }
         const hit = document.createElementNS(NS, 'polygon');
+        hit.setAttribute('class', 'pane-hit');
         hit.setAttribute('points', pts);
         g.append(lift, hit);
         svg.append(g);
@@ -772,6 +763,9 @@ const render = {
         // While one of its bars is lit, the cicada glows faintly too: it is the one speaking.
         const speak = () => g.classList.toggle('is-speaking', group.bars.some((b) => b.classList.contains('is-current')));
         new MutationObserver(speak).observe(fig, { subtree: true, attributes: true, attributeFilter: ['class'] });
+        // Belt and braces: check again shortly after any click on the page.
+        const later = () => { if (!fig.isConnected) { document.removeEventListener('click', later, true); return; } for (const ms of [60, 450, 900, 2500]) setTimeout(speak, ms); };
+        document.addEventListener('click', later, true);
         g.addEventListener('click', open);
         g.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); }
