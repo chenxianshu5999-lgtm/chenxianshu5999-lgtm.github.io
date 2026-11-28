@@ -709,12 +709,13 @@ const render = {
         g.setAttribute('tabindex', '0');
         g.setAttribute('role', 'button');
         g.setAttribute('aria-label', t.label || 'Open');
-        // The outline itself is the light: plain white strokes laid over one
-        // another, wide and faint to narrow and solid. No filters, no clipping,
-        // so every browser draws it. Widths are in the picture's pixels.
+        // A soft light around the outline with no line in it: many faint white
+        // strokes laid over one another, each a little wider, so they add up to
+        // a blur that fades outward. No filters, no clipping, so every browser
+        // draws it. Widths are in the picture's pixels.
         const lift = document.createElementNS(NS, 'g');
         lift.setAttribute('class', 'pane-lift');
-        for (const [w, o] of [[64, 0.035], [44, 0.05], [28, 0.07], [16, 0.11], [5, 0.7]]) {
+        for (const [w, o] of Array.from({ length: 14 }, (_, k) => [10 + k * 10, 0.036])) {
           const ring = document.createElementNS(NS, 'polygon');
           ring.setAttribute('points', pts);
           ring.setAttribute('fill', 'none');
