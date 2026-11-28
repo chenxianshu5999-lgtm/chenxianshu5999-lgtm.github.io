@@ -313,6 +313,7 @@ body:not(.is-hidden-room) .board-nav a:has(+ a.nav-hidden) { border-bottom: 1px 
 .pane-thing polygon { fill: transparent; pointer-events: all; cursor: pointer; }
 .pane-lift { opacity: 0; pointer-events: none; transition: opacity 0.38s ease; filter: brightness(1.3) drop-shadow(0 0 14px rgba(255, 255, 255, 0.55)); }
 .pane-thing.is-new .pane-lift { animation: thing-breathe 2.4s ease-in-out infinite alternate; }
+.pane-thing.is-speaking .pane-lift { opacity: 0.5; animation: none; }
 .pane-thing:hover .pane-lift, .pane-thing:focus-visible .pane-lift { opacity: 1; animation: none; }
 @keyframes thing-breathe { from { opacity: 0; } to { opacity: 0.45; } }
 @media (prefers-reduced-motion: reduce) { .pane-thing.is-new .pane-lift { animation: none; } }

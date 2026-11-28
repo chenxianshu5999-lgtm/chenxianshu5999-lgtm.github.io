@@ -759,6 +759,9 @@ const render = {
           if (!group.read) return;
           if (group.bars[0].hidden) group.unfold(); else group.fold();
         };
+        // While one of its bars is lit, the cicada glows faintly too: it is the one speaking.
+        const speak = () => g.classList.toggle('is-speaking', group.bars.some((b) => b.classList.contains('is-current')));
+        new MutationObserver(speak).observe(fig, { subtree: true, attributes: true, attributeFilter: ['class'] });
         g.addEventListener('click', open);
         g.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); }
