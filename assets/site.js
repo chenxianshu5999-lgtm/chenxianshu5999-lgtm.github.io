@@ -727,7 +727,7 @@ const render = {
         const outside = document.createElementNS(NS, 'g');
         outside.setAttribute('clip-path', `url(#${cutId})`);
         lift.append(outside);
-        for (const [w, o] of Array.from({ length: 8 }, (_, k) => [6 + k * 6, 0.075])) {
+        for (const [w, o] of [...Array.from({ length: 8 }, (_, k) => [6 + k * 6, 0.075]), [16, 0.12], [10, 0.16], [5, 0.2]]) {
           const ring = document.createElementNS(NS, 'polygon');
           ring.setAttribute('points', pts);
           ring.setAttribute('fill', 'none');
