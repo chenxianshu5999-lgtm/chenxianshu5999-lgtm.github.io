@@ -714,7 +714,7 @@ const render = {
         // so every browser draws it. Widths are in the picture's pixels.
         const lift = document.createElementNS(NS, 'g');
         lift.setAttribute('class', 'pane-lift');
-        for (const [w, o] of [[110, 0.07], [80, 0.09], [54, 0.12], [34, 0.18], [20, 0.3], [9, 1]]) {
+        for (const [w, o] of [[64, 0.035], [44, 0.05], [28, 0.07], [16, 0.11], [5, 0.7]]) {
           const ring = document.createElementNS(NS, 'polygon');
           ring.setAttribute('points', pts);
           ring.setAttribute('fill', 'none');
@@ -760,9 +760,9 @@ const render = {
           if (!group.read) return;
           if (group.bars[0].hidden) group.unfold(); else group.fold();
         };
-        // While one of its bars is lit, the cicada glows faintly too: it is the one speaking.
-        const speak = () => g.classList.toggle('is-speaking', group.bars.some((b) => b.classList.contains('is-current')));
-        new MutationObserver(speak).observe(fig, { subtree: true, attributes: true, attributeFilter: ['class'] });
+        // While any of its bars is on screen, lit or not, the cicada glows: it is the one speaking.
+        const speak = () => g.classList.toggle('is-speaking', group.bars.some((b) => !b.hidden && !b.classList.contains('is-faded')));
+        new MutationObserver(speak).observe(fig, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden'] });
         // Belt and braces: check again shortly after any click on the page.
         const later = () => { if (!fig.isConnected) { document.removeEventListener('click', later, true); return; } for (const ms of [60, 450, 900, 2500]) setTimeout(speak, ms); };
         document.addEventListener('click', later, true);
