@@ -686,6 +686,85 @@ const render = {
       if (i === back) placeDoor(l, null);
       entries.push({ bar, dot });
     }
+    // Things in the picture that are themselves the dot (the cicada): their
+    // outline, in the picture's own pixels, is cut out as the place to click.
+    // Each keeps its own reading, apart from the lines and their order, and is
+    // not put back when coming home from another room.
+    const things = shown(d.things).filter((t) => t.text && t.points);
+    if (things.length) {
+      const NS = 'http://www.w3.org/2000/svg';
+      const [W, H] = d.size || [4200, 3455];
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'pane-things');
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.setAttribute('preserveAspectRatio', 'none');
+      const defs = document.createElementNS(NS, 'defs');
+      svg.append(defs);
+      // Under the bars and dots, so a bar lying across the cicada still takes its click.
+      img.after(svg);
+      things.forEach((t, k) => {
+        const pts = t.points.map((p) => p.join(',')).join(' ');
+        const id = `pane-cut-${Date.now().toString(36)}-${k}`;
+        const clip = document.createElementNS(NS, 'clipPath');
+        clip.id = id;
+        const cp = document.createElementNS(NS, 'polygon');
+        cp.setAttribute('points', pts);
+        clip.append(cp); defs.append(clip);
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'pane-thing is-new');
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('role', 'button');
+        g.setAttribute('aria-label', t.label || 'Open');
+        // The cut-out copy of the picture lifts when pointed at.
+        const lift = document.createElementNS(NS, 'g');
+        lift.setAttribute('class', 'pane-lift');
+        const copy = document.createElementNS(NS, 'image');
+        copy.setAttribute('href', img.src);
+        copy.setAttribute('width', W); copy.setAttribute('height', H);
+        copy.setAttribute('preserveAspectRatio', 'none');
+        copy.setAttribute('clip-path', `url(#${id})`);
+        lift.append(copy);
+        const hit = document.createElementNS(NS, 'polygon');
+        hit.setAttribute('points', pts);
+        g.append(lift, hit);
+        svg.append(g);
+
+        const group = { bars: [], read: false };
+        const FADE = still ? 0 : 380;
+        group.fold = () => {
+          if (group.busy) return;
+          group.busy = true;
+          for (const b of group.bars) { b.classList.add('is-faded'); b.classList.remove('is-current'); }
+          if (lit && group.bars.includes(lit)) lit = null;
+          setTimeout(() => {
+            for (const b of group.bars) { b.hidden = true; b.classList.remove('is-faded'); }
+            group.busy = false;
+          }, FADE);
+        };
+        group.unfold = () => {
+          if (group.busy) return;
+          group.busy = true;
+          for (const b of group.bars) {
+            b.hidden = false; b.classList.add('is-faded');
+            requestAnimationFrame(() => requestAnimationFrame(() => b.classList.remove('is-faded')));
+          }
+          setTimeout(() => { light(group.bars[group.bars.length - 1]); group.busy = false; }, FADE);
+        };
+        const bar = makeBar({ ...t, points: undefined }, (t.then || []).filter((x) => x && x.text), null, group);
+        let started = false;
+        const open = (e) => {
+          e.stopPropagation();
+          g.classList.remove('is-new');
+          if (!started) { started = true; bar.play(); return; }
+          if (!group.read) return;
+          if (group.bars[0].hidden) group.unfold(); else group.fold();
+        };
+        g.addEventListener('click', open);
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); }
+        });
+      });
+    }
     if (back > 0) {
       const restore = () => requestAnimationFrame(() => {
         if (!fig.isConnected) return;
