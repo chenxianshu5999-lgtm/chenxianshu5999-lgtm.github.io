@@ -964,7 +964,9 @@ const OPENED_DOORS = new Set();
 // How the last time through T1 went: 'started' if the visitor left before the
 // end, 'finished' if they saw it through. T1 reports this from its frame.
 let T1_STATE = null;
-window.substanzT1 = (state) => { T1_STATE = state; };
+// Once seen through, it stays 'finished' for the visit: going in again and
+// leaving early does not bring the taunt back.
+window.substanzT1 = (state) => { if (T1_STATE !== 'finished') T1_STATE = state; };
 const HIDDEN = { registry: 'Register', 'phantom-limb': 'Phantom Limb', t0: 'T0', t1: 'T1', telescope: 'Qiyesi Telescope' };
 // Hidden rooms that get a row in the left menu, shown only inside the black side.
 const HIDDEN_NAV = ['t0'];
