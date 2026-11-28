@@ -715,7 +715,19 @@ const render = {
         // draws it. Widths are in the picture's pixels.
         const lift = document.createElementNS(NS, 'g');
         lift.setAttribute('class', 'pane-lift');
-        for (const [w, o] of Array.from({ length: 14 }, (_, k) => [10 + k * 10, 0.036])) {
+        // Keep the light outside the outline: clip to everything but the cicada
+        // (the whole picture with the outline punched out of it).
+        const cutId = `pane-out-${Date.now().toString(36)}-${k}`;
+        const cut = document.createElementNS(NS, 'clipPath');
+        cut.id = cutId;
+        const hole = document.createElementNS(NS, 'path');
+        hole.setAttribute('d', `M0,0H${W}V${H}H0Z M${t.points.map((p) => p.join(',')).join(' L')}Z`);
+        hole.setAttribute('clip-rule', 'evenodd');
+        cut.append(hole); defs.append(cut);
+        const outside = document.createElementNS(NS, 'g');
+        outside.setAttribute('clip-path', `url(#${cutId})`);
+        lift.append(outside);
+        for (const [w, o] of Array.from({ length: 8 }, (_, k) => [6 + k * 6, 0.075])) {
           const ring = document.createElementNS(NS, 'polygon');
           ring.setAttribute('points', pts);
           ring.setAttribute('fill', 'none');
@@ -723,7 +735,7 @@ const render = {
           ring.setAttribute('stroke-width', w);
           ring.setAttribute('stroke-opacity', o);
           ring.setAttribute('stroke-linejoin', 'round');
-          lift.append(ring);
+          outside.append(ring);
         }
         const hit = document.createElementNS(NS, 'polygon');
         hit.setAttribute('class', 'pane-hit');
