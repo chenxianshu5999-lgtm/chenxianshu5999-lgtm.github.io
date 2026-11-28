@@ -700,6 +700,16 @@ const render = {
       svg.setAttribute('preserveAspectRatio', 'none');
       const defs = document.createElementNS(NS, 'defs');
       svg.append(defs);
+      // A white halo around the cut-out, drawn by SVG itself (Safari draws CSS
+      // filters on SVG parts unreliably). Sizes are in the picture's pixels.
+      defs.insertAdjacentHTML('beforeend',
+        '<filter id="pane-thing-glow" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">'
+        + '<feMorphology in="SourceAlpha" operator="dilate" radius="6" result="grow"/>'
+        + '<feFlood flood-color="#fff"/><feComposite in2="grow" operator="in" result="ring"/>'
+        + '<feGaussianBlur in="ring" stdDeviation="40" result="halo"/>'
+        + '<feComponentTransfer in="SourceGraphic" result="lit"><feFuncR type="linear" slope="1.15"/><feFuncG type="linear" slope="1.15"/><feFuncB type="linear" slope="1.15"/></feComponentTransfer>'
+        + '<feMerge><feMergeNode in="halo"/><feMergeNode in="halo"/><feMergeNode in="ring"/><feMergeNode in="lit"/></feMerge>'
+        + '</filter>');
       // Under the bars and dots, so a bar lying across the cicada still takes its click.
       img.after(svg);
       things.forEach((t, k) => {
